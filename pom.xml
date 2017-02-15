@@ -32,12 +32,24 @@
                 </executions>
             </plugin>
             <plugin>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>2.19.1</version>
+                <groupId>org.pitest</groupId>
+                <artifactId>pitest-maven</artifactId>
+                <version>1.1.11</version>
+                <executions>
+                    <execution>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>mutationCoverage</goal>
+                        </goals>
+                        <configuration>
+                            <skip>true</skip>
+                            <coverageThreshold>99</coverageThreshold>
+                            <mutationThreshold>99</mutationThreshold>
+                        </configuration>
+                    </execution>
+                </executions>
                 <configuration>
-                    <includes>
-                        <include>**/*Spec*</include>
-                    </includes>
+                    <timestampedReports>false</timestampedReports>
                 </configuration>
             </plugin>
         </plugins>
@@ -49,20 +61,16 @@
             <artifactId>scala-library</artifactId>
             <version>2.12.1</version>
         </dependency>
-        <!-- https://mvnrepository.com/artifact/org.specs2/specs2_2.10 -->
         <dependency>
-            <groupId>org.specs2</groupId>
-            <artifactId>specs2-core_2.12</artifactId>
-            <version>3.8.8</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.specs2</groupId>
-            <artifactId>specs2-junit_2.12</artifactId>
-            <version>3.8.8</version>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
 
+    <prerequisites>
+        <maven>3.0</maven>
+    </prerequisites>
 
 </project>
