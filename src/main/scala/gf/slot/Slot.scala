@@ -1,5 +1,6 @@
-package gf
+package gf.slot
 
+import gf.core.{Game, Sym, Wallet, wild}
 
 import scala.util.Random
 
@@ -10,12 +11,12 @@ case class Spin(amount: BigDecimal) extends Request
 object Bonus extends Request
 
 case class Slot(
-            random: Random,
-            reels: Reels,
-            payTable: PayTable,
-            payLines: PayLines,
-            stops: Stops = List(0, 0, 0, 0, 0)
-          ) extends Game[Request] {
+                 random: Random,
+                 reels: Reels,
+                 payTable: PayTable,
+                 payLines: PayLines,
+                 stops: Stops = List(0, 0, 0, 0, 0)
+               ) extends Game[Request] {
 
   val window: Window = stops
     .zip(reels)
@@ -46,15 +47,9 @@ case class Slot(
         })
   }
     // find the pay table entry
-    .map {
-    case (line, x) => (line, payTable.get(x))
-  }
-    .filter {
-      case (_, x) => x.isDefined
-    }
-    .map {
-      case (line, x) => (line, x.get)
-    }
+    .map { case (line, x) => (line, payTable.get(x)) }
+    .filter { case (_, x) => x.isDefined }
+    .map { case (line, x) => (line, x.get) }
 
   override def apply(event: Request, wallet: Wallet): Option[Slot] = {
 

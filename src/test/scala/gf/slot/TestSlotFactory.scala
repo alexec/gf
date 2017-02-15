@@ -1,4 +1,6 @@
-package gf
+package gf.slot
+
+import gf.core.GameFactory
 
 import scala.util.Random
 

@@ -1,4 +1,4 @@
-package gf
+package gf.core
 
 trait Wallet {
 
@@ -9,7 +9,7 @@ trait Wallet {
 }
 
 object NullWallet extends Wallet {
-  override def wager(amount: BigDecimal) = {}
-
   override val getBalance = BigDecimal(0)
+
+  override def wager(amount: BigDecimal) = {}
 }
