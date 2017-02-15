@@ -17,8 +17,5 @@ class SlotSpec extends SpecificationWithJUnit {
     "have predicatable payouts" in {
       slot.payouts must beEqualTo(List((List(1, 1, 1, 1, 1), 3)))
     }
-    "fail!" in {
-      1 must beEqualTo(0)
-    }
   }
 }
