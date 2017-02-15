@@ -1,12 +1,16 @@
 package gf.slot
 
-import gf.core.NullWallet
+import gf.core.SimpleWallet
 import org.junit.Assert._
 import org.junit.Test
 
 class SlotTest {
   private val stops = List(6, 3, 1, 2, 4)
-  private val slot = new TestSlotFactory(_ => stops).toGame(None)(Spin(BigDecimal(0)), NullWallet).get
+  private val wallet = SimpleWallet()
+  private val slot = new TestSlotFactory(_ => stops).toGame(None)(Spin(BigDecimal(1)), wallet).get
+
+  @Test
+  def balanceReduced() = assertEquals(BigDecimal(999), wallet.balance)
 
   @Test
   def stopsAreSame() = assertEquals(stops, slot.stops)

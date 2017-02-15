@@ -4,6 +4,8 @@ trait Wallet {
 
   def wager(amount: BigDecimal)
 
+  def payout(amount: BigDecimal)
+
   def getBalance: BigDecimal
 
 }
@@ -11,5 +13,7 @@ trait Wallet {
 object NullWallet extends Wallet {
   override val getBalance = BigDecimal(0)
 
-  override def wager(amount: BigDecimal) = {}
+  override def payout(amount: BigDecimal): Unit = {}
+
+  override def wager(amount: BigDecimal): Unit = {}
 }

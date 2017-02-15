@@ -39,9 +39,8 @@ case class Slot(
       val sym = syms.find(sym => sym != wild).getOrElse(wild)
       (line, syms
         .foldLeft((sym, 0)) {
-          case ((sym: Sym, count: Int), nextSym) => {
+          case ((sym: Sym, count: Int), nextSym) =>
             (sym, if (sym == nextSym || nextSym == wild) count + 1 else 0)
-          }
         })
   }
     // find the pay table entry
@@ -52,7 +51,7 @@ case class Slot(
   override def apply(event: Request, wallet: Wallet): Option[Slot] = {
 
     event match {
-      case Spin(amount) => {
+      case Spin(amount) =>
 
         wallet.wager(amount)
 
@@ -63,7 +62,6 @@ case class Slot(
           payLines,
           random(reels)
         ))
-      }
       // case Bonus => ???
       case _ => throw new AssertionError
     }
