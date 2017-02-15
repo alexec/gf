@@ -1,9 +1,10 @@
 package gf
 
 import org.specs2.mutable._
+
 import scala.util.Random
 
-class SlotSpec extends Specification {
+class SlotSpec extends SpecificationWithJUnit {
   private val slot = new TestSlotFactory(() => new Random(0)).toGame(None)(Spin(BigDecimal(0)), NullWallet).get
 
   "slot" should {
@@ -15,6 +16,9 @@ class SlotSpec extends Specification {
     }
     "have predicatable payouts" in {
       slot.payouts must beEqualTo(List((List(1, 1, 1, 1, 1), 3)))
+    }
+    "fail!" in {
+      1 must beEqualTo(0)
     }
   }
 }
