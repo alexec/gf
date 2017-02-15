@@ -2,27 +2,26 @@ package gf.slot
 
 import gf.core.{Game, Sym, Wallet, wild}
 
-trait Request
-
-case class Spin(amount: BigDecimal) extends Request
-
-object Bonus extends Request
 
 case class Slot(
                  random: Reels => Stops,
+                 wallet: Wallet,
                  reels: Reels,
                  payTable: PayTable,
                  payLines: PayLines,
-                 stops: Stops = List(0, 0, 0, 0, 0)
-               ) extends Game[Request] {
+                 var stops: Stops = List(0, 0, 0, 0, 0)
+               ) extends Game {
 
-  val window: Window = stops
-    .zip(reels)
-    .map {
-      case (stop, reel) => reel.slice(stop, stop + 3) ::: reel.take(3 - reel.length + stop)
-    }
+  def spin(amount: BigDecimal) = {
 
-  val payouts: List[(PayLine, Int)] = payLines
+    wallet.wager(amount)
+
+    stops = random(reels)
+
+    payouts().foreach { case (_, b) => wallet.payout(amount * b) }
+  }
+
+  def payouts(): List[(PayLine, Int)] = payLines
     // extract the line
     .map {
     line =>
@@ -48,22 +47,10 @@ case class Slot(
     .filter { case (_, x) => x.isDefined }
     .map { case (line, x) => (line, x.get) }
 
-  override def apply(event: Request, wallet: Wallet): Option[Slot] = {
-
-    event match {
-      case Spin(amount) =>
-
-        wallet.wager(amount)
-
-        Some(Slot(
-          random,
-          reels,
-          payTable,
-          payLines,
-          random(reels)
-        ))
-      // case Bonus => ???
-      case _ => throw new AssertionError
+  def window(): Window = stops
+    .zip(reels)
+    .map {
+      case (stop, reel) => reel.slice(stop, stop + 3) ::: reel.take(3 - reel.length + stop)
     }
-  }
+
 }

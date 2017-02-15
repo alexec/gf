@@ -1,10 +1,10 @@
 package gf.slot
 
-import gf.core.GameFactory
+import gf.core.{GameFactory, Wallet}
 
 case class State(stops: Stops)
 
-class TestSlotFactory(random: Reels => Stops) extends GameFactory[Slot, State] {
+class TestSlotFactory(random: Reels => Stops, wallet: Wallet) extends GameFactory[Slot, State] {
 
   private val reels = List(
     List(4, 1, 2, 6, 3, 7, 9, 8, 4),
@@ -22,6 +22,9 @@ class TestSlotFactory(random: Reels => Stops) extends GameFactory[Slot, State] {
 
   override def toMaybeState(game: Slot): Option[State] = Some(State(game.stops))
 
-  override def toGame(maybeState: Option[State]): Slot = maybeState.map(s => Slot(random, reels, payTable, payLines, s.stops)).getOrElse(Slot(random, reels, payTable, payLines))
+  override def toGame(maybeState: Option[State]): Slot =
+    maybeState
+      .map(s => Slot(random, wallet, reels, payTable, payLines, s.stops))
+      .getOrElse(Slot(random, wallet, reels, payTable, payLines))
 
 }
