@@ -4,11 +4,8 @@ import gf.core.NullWallet
 import org.junit.Assert._
 import org.junit.Test
 
-import scala.util.Random
-
 class SlotTest {
-  private val randomFactory = () => new Random(0)
-  private val slot = new TestSlotFactory(randomFactory).toGame(None)(Spin(BigDecimal(0)), NullWallet).get
+  private val slot = new TestSlotFactory(_ => List(6, 3, 1, 2, 4)).toGame(None)(Spin(BigDecimal(0)), NullWallet).get
 
   @Test
   def stops() = assertEquals(List(6, 3, 1, 2, 4), slot.stops)

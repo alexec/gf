@@ -2,8 +2,6 @@ package gf.slot
 
 import gf.core.{Game, Sym, Wallet, wild}
 
-import scala.util.Random
-
 trait Request
 
 case class Spin(amount: BigDecimal) extends Request
@@ -11,7 +9,7 @@ case class Spin(amount: BigDecimal) extends Request
 object Bonus extends Request
 
 case class Slot(
-                 random: Random,
+                 random: Reels => Stops,
                  reels: Reels,
                  payTable: PayTable,
                  payLines: PayLines,
@@ -63,7 +61,7 @@ case class Slot(
           reels,
           payTable,
           payLines,
-          reels.map(reel => random.nextInt(reel.length))
+          random(reels)
         ))
       }
       // case Bonus => ???
