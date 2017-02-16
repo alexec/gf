@@ -7,9 +7,9 @@ sealed case class Pocket(number: Int) {
   require(number >= 0)
   require(number <= 36)
 
-  def isRed: Boolean = List(1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36).contains(number)
+  def isBlack: Boolean = number > 0 && !isRed
 
-  //def isBlack: Boolean = number > 0 && !isRed
+  def isRed: Boolean = List(1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36).contains(number)
 
   // def isColumn(col: Int): Boolean = {
   //  Map(
@@ -41,6 +41,10 @@ case class NumberBet(amount: BigDecimal, pocket: Pocket) extends Bet {
 
 case class RedBet(amount: BigDecimal) extends Bet {
   override protected def payoutMultiplier(pocket: Pocket): Int = if (pocket.isRed) 1 else 0
+}
+
+case class BlackBet(amount: BigDecimal) extends Bet {
+  override protected def payoutMultiplier(pocket: Pocket): Int = if (pocket.isBlack) 1 else 0
 }
 
 case class Roulette(random: () => Pocket, wallet: Wallet, var pocket: Pocket = Pocket(0), var bets: List[Bet] = List()) {

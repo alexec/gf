@@ -6,9 +6,10 @@ import org.junit.Test
 
 class RouletteTest {
   private val wallet = SimpleWallet()
+  private val wager = BigDecimal(10)
+  //noinspection ForwardReference
   private val random = () => winningPocket
   private val roulette = Roulette(random = random, wallet = wallet)
-  private val wager = BigDecimal(10)
   private var winningPocket = Pocket(1)
   private var losingPocket = Pocket(20)
 
@@ -22,6 +23,11 @@ class RouletteTest {
 
   @Test def pocket33IsNotRed(): Unit = assertFalse(Pocket(33).isRed)
 
+  @Test def pocket0IsNotBlack(): Unit = assertFalse(Pocket(0).isBlack)
+
+  @Test def pocket19IsNotRed(): Unit = assertFalse(Pocket(19).isBlack)
+
+  @Test def pocket33IsBlack(): Unit = assertTrue(Pocket(33).isBlack)
   @Test(expected = classOf[IllegalArgumentException]) def pocketCannotBeNegative(): Unit =
     Pocket(-1)
 
@@ -45,8 +51,6 @@ class RouletteTest {
     assertEquals(BigDecimal(990), wallet.getBalance)
   }
 
-  private def winningBet() = NumberBet(wager, winningPocket)
-
   @Test def addedBetIsAdded() = {
     val bet = NumberBet(wager, Pocket(1))
     roulette.addBet(bet)
@@ -64,6 +68,8 @@ class RouletteTest {
     roulette.spin()
     assertEquals(List.empty, roulette.bets)
   }
+
+  private def winningBet() = NumberBet(wager, winningPocket)
 
   @Test def losingBetDoesNotPayout() = {
     roulette.addBet(losingBet())
@@ -92,4 +98,17 @@ class RouletteTest {
     assertEquals(BigDecimal(990), wallet.getBalance)
   }
 
+  @Test def winningBlackBetPaysEvens() = {
+    winningPocket = Pocket(33)
+    roulette.addBet(BlackBet(wager))
+    roulette.spin()
+    assertEquals(BigDecimal(1010), wallet.getBalance)
+  }
+
+  @Test def losingBlackBetPaysZero() = {
+
+    roulette.addBet(BlackBet(wager))
+    roulette.spin()
+    assertEquals(BigDecimal(990), wallet.getBalance)
+  }
 }
