@@ -12,7 +12,7 @@ case class Slot(
                  var stops: Stops = List(0, 0, 0, 0, 0)
                ) extends Game {
 
-  def spin(amount: BigDecimal) = {
+  def spin(amount: BigDecimal): Unit = {
 
     wallet.wager(amount)
 
@@ -26,7 +26,7 @@ case class Slot(
     .map {
     line =>
       (line, line
-        .zip(window)
+        .zip(window())
         .map {
           case (stop, reel) =>
             reel(stop)
