@@ -25,10 +25,16 @@ case class Roulette(random: () => Pocket, wallet: Wallet, var pocket: Pocket = P
   def spin(): Unit = {
     pocket = random()
     val payouts = bets.map {
-      case NumberBet(amount, pocket1) => if (pocket1 == pocket) Some(amount * 10) else None
+      case NumberBet(amount, pocket1) => if (pocket1 == pocket) Some(amount * 35) else None
       case _ => None
     }
+      .filter {
+        _.isDefined
+      }
+      .map {
+        _.get
+      }
     bets = List()
-    payouts.foreach { case Some(payout) => wallet.payout(payout) }
+    payouts.foreach { payout => wallet.payout(payout) }
   }
 }
