@@ -9,24 +9,20 @@ case class Slot(
                  reels: Reels,
                  payTable: PayTable,
                  payLines: PayLines,
-                 var stops: Stops = List(0, 0, 0, 0, 0)
+                 stops: Stops = List(0, 0, 0, 0, 0)
                ) {
 
-  def spin(amount: BigDecimal): Unit = {
-
-    wallet.wager(amount)
-
-    stops = random(reels)
-
-    payouts().foreach { case (_, b) => wallet.payout(amount * b) }
-  }
-
-  def payouts(): List[(PayLine, Int)] = payLines
+  val window: Window = stops
+    .zip(reels)
+    .map {
+      case (stop, reel) => reel.slice(stop, stop + 3) ::: reel.take(3 - reel.length + stop)
+    }
+  val payouts: List[(PayLine, Int)] = payLines
     // extract the line
     .map {
     line =>
       (line, line
-        .zip(window())
+        .zip(window)
         .map {
           case (stop, reel) =>
             reel(stop)
@@ -47,10 +43,16 @@ case class Slot(
     .filter { case (_, x) => x.isDefined }
     .map { case (line, x) => (line, x.get) }
 
-  def window(): Window = stops
-    .zip(reels)
-    .map {
-      case (stop, reel) => reel.slice(stop, stop + 3) ::: reel.take(3 - reel.length + stop)
-    }
+  def spin(amount: BigDecimal): Slot = {
+
+    wallet.wager(amount)
+
+    val slot = copy(stops = random(reels))
+
+    slot.payouts.foreach { case (_, b) => wallet.payout(amount * b) }
+
+    slot
+  }
+
 
 }

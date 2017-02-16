@@ -47,20 +47,20 @@ case class BlackBet(amount: BigDecimal) extends Bet {
   override protected def payoutMultiplier(pocket: Pocket): Int = if (pocket.isBlack) 1 else 0
 }
 
-case class Roulette(random: () => Pocket, wallet: Wallet, var pocket: Pocket = Pocket(0), var bets: List[Bet] = List()) {
-  def addBet(bet: Bet): Unit = {
+case class Roulette(random: () => Pocket, wallet: Wallet, pocket: Pocket = Pocket(0), bets: List[Bet] = List()) {
+  def addBet(bet: Bet): Roulette = {
     wallet.wager(bet.amount)
-    bets = bet :: bets
+    copy(bets = bet :: bets)
   }
 
-  def spin(): Unit = {
-    pocket = random()
-    val payouts = bets.map {
-      _.payout(pocket)
+  def spin(): Roulette = {
+    val roulette = copy(pocket = random(), bets = List())
+    bets.map {
+      _.payout(roulette.pocket)
     }
-    bets = List()
-    payouts.foreach {
+      .foreach {
       wallet.payout
     }
+    roulette
   }
 }

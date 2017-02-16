@@ -2,7 +2,7 @@ package gf.model.slot
 
 import gf.model.core.SimpleWallet
 import org.junit.Assert._
-import org.junit.{Before, Test}
+import org.junit.Test
 
 class SlotTest {
 
@@ -23,8 +23,7 @@ class SlotTest {
   private val stops = List(6, 3, 1, 2, 4)
   private val wallet = SimpleWallet()
   private val slot = Slot(_ => stops, wallet, reels, payTable, payLines)
-
-  @Before def before(): Unit = slot.spin(BigDecimal(1))
+    .spin(BigDecimal(1))
 
   @Test
   def balanceReduced() = assertEquals(BigDecimal(1002), wallet.balance)
@@ -33,8 +32,8 @@ class SlotTest {
   def stopsAreSame() = assertEquals(stops, slot.stops)
 
   @Test
-  def windowIsAsExpected() = assertEquals(List(List(9, 8, 4), List(6, 8, 1), List(1, 8, 2), List(2, 8, 5), List(6, 0, 1)), slot.window())
+  def windowIsAsExpected() = assertEquals(List(List(9, 8, 4), List(6, 8, 1), List(1, 8, 2), List(2, 8, 5), List(6, 0, 1)), slot.window)
 
   @Test
-  def payoutsAreAsExpected() = assertEquals(List((List(1, 1, 1, 1, 1), 3)), slot.payouts())
+  def payoutsAreAsExpected() = assertEquals(List((List(1, 1, 1, 1, 1), 3)), slot.payouts)
 }

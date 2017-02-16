@@ -28,52 +28,51 @@ class RouletteTest {
   @Test def pocket19IsNotRed(): Unit = assertFalse(Pocket(19).isBlack)
 
   @Test def pocket33IsBlack(): Unit = assertTrue(Pocket(33).isBlack)
+
   @Test(expected = classOf[IllegalArgumentException]) def pocketCannotBeNegative(): Unit =
     Pocket(-1)
 
   @Test(expected = classOf[IllegalArgumentException]) def pocketCannotBe37(): Unit =
     Pocket(37)
 
-  @Test(expected = classOf[IllegalArgumentException]) def cannotBetOnZero() = {
+  @Test(expected = classOf[IllegalArgumentException]) def cannotBetOnZero(): Unit = {
     roulette.addBet(NumberBet(wager, Pocket(0)))
   }
 
-  @Test(expected = classOf[IllegalArgumentException]) def cannotBetOn37() = {
+  @Test(expected = classOf[IllegalArgumentException]) def cannotBetOn37(): Unit = {
     roulette.addBet(NumberBet(wager, Pocket(37)))
   }
 
-  @Test(expected = classOf[IllegalArgumentException]) def wagerAmountCannotBetNegative() = {
+  @Test(expected = classOf[IllegalArgumentException]) def wagerAmountCannotBetNegative(): Unit = {
     roulette.addBet(NumberBet(BigDecimal(-1), winningPocket))
   }
 
-  @Test def addingBetDecreasesBalance() = {
+  @Test def addingBetDecreasesBalance(): Unit = {
     roulette.addBet(winningBet())
     assertEquals(BigDecimal(990), wallet.getBalance)
   }
 
+  @Test def addedBetIsAdded(): Unit = {
+    val bet = NumberBet(wager, Pocket(1))
+
+    assertEquals(List(bet), roulette.addBet(bet).bets)
+  }
+
+  @Test def spinClearsBets(): Unit = {
+    assertEquals(List.empty, roulette.addBet(winningBet())
+      .spin().bets)
+  }
+
   private def winningBet() = NumberBet(wager, winningPocket)
 
-  @Test def addedBetIsAdded() = {
-    val bet = NumberBet(wager, Pocket(1))
-    roulette.addBet(bet)
-    assertEquals(List(bet), roulette.bets)
+  @Test def spinEmptiesBet(): Unit = {
+    assertEquals(List.empty, roulette.addBet(winningBet())
+      .spin().bets)
   }
 
-  @Test def spinClearsBets() = {
-    roulette.addBet(winningBet())
-    roulette.spin()
-    assertEquals(List.empty, roulette.bets)
-  }
-
-  @Test def spinEmptiesBet() = {
-    roulette.addBet(winningBet())
-    roulette.spin()
-    assertEquals(List.empty, roulette.bets)
-  }
-
-  @Test def losingBetDoesNotPayout() = {
+  @Test def losingBetDoesNotPayout(): Unit = {
     roulette.addBet(losingBet())
-    roulette.spin()
+      .spin()
     assertEquals(BigDecimal(990), wallet.getBalance)
   }
 
@@ -81,34 +80,33 @@ class RouletteTest {
 
   @Test def winningNumberBetPays36x() = {
     roulette.addBet(winningBet())
-    roulette.spin()
+      .spin()
     assertEquals(BigDecimal(990 + 360), wallet.getBalance)
   }
 
   @Test def winningRedBetPaysEvens() = {
     roulette.addBet(RedBet(wager))
-    roulette.spin()
+      .spin()
     assertEquals(BigDecimal(1010), wallet.getBalance)
   }
 
   @Test def losingRedBetPaysZero() = {
     winningPocket = Pocket(20)
     roulette.addBet(RedBet(wager))
-    roulette.spin()
+      .spin()
     assertEquals(BigDecimal(990), wallet.getBalance)
   }
 
   @Test def winningBlackBetPaysEvens() = {
     winningPocket = Pocket(33)
     roulette.addBet(BlackBet(wager))
-    roulette.spin()
+      .spin()
     assertEquals(BigDecimal(1010), wallet.getBalance)
   }
 
   @Test def losingBlackBetPaysZero() = {
-
     roulette.addBet(BlackBet(wager))
-    roulette.spin()
+      .spin()
     assertEquals(BigDecimal(990), wallet.getBalance)
   }
 }
