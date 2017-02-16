@@ -10,10 +10,16 @@ sealed case class Pocket(number: Int) {
 
 sealed trait Bet {
   val amount: BigDecimal
+
+  def payout(pocket: Pocket) = amount * payoutMultiplier(pocket)
+
+  def payoutMultiplier(pocket: Pocket): Int
 }
 
 case class NumberBet(amount: BigDecimal, pocket: Pocket) extends Bet {
   require(pocket.number > 0)
+
+  override def payoutMultiplier(pocket: Pocket): Int = if (pocket == this.pocket) 35 else 0
 }
 
 case class Roulette(random: () => Pocket, wallet: Wallet, var pocket: Pocket = Pocket(0), var bets: List[Bet] = List()) {
@@ -25,16 +31,11 @@ case class Roulette(random: () => Pocket, wallet: Wallet, var pocket: Pocket = P
   def spin(): Unit = {
     pocket = random()
     val payouts = bets.map {
-      case NumberBet(amount, pocket1) => if (pocket1 == pocket) Some(amount * 35) else None
-      case _ => None
+      _.payout(pocket)
     }
-      .filter {
-        _.isDefined
-      }
-      .map {
-        _.get
-      }
     bets = List()
-    payouts.foreach { payout => wallet.payout(payout) }
+    payouts.foreach {
+      wallet.payout
+    }
   }
 }
