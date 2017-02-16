@@ -2,8 +2,11 @@ package gf.model.roulette
 
 import gf.model.core.Wallet
 
+import scala.beans.BeanProperty
+import scala.util.Random
 
-sealed case class Pocket(number: Int) {
+
+sealed case class Pocket(@BeanProperty number: Int) {
   require(number >= 0)
   require(number <= 36)
 
@@ -21,7 +24,7 @@ sealed case class Pocket(number: Int) {
 }
 
 sealed trait Bet {
-  val amount: BigDecimal
+  @BeanProperty val amount: BigDecimal
 
   require(amount > 0)
 
@@ -33,21 +36,25 @@ sealed trait Bet {
   protected def payoutMultiplier(pocket: Pocket): Int
 }
 
-case class NumberBet(amount: BigDecimal, pocket: Pocket) extends Bet {
+case class NumberBet(@BeanProperty amount: BigDecimal, pocket: Pocket) extends Bet {
   require(pocket.number > 0)
 
   override protected def payoutMultiplier(pocket: Pocket): Int = if (pocket == this.pocket) 35 else 0
 }
 
-case class RedBet(amount: BigDecimal) extends Bet {
+case class RedBet(@BeanProperty amount: BigDecimal) extends Bet {
   override protected def payoutMultiplier(pocket: Pocket): Int = if (pocket.isRed) 1 else 0
 }
 
-case class BlackBet(amount: BigDecimal) extends Bet {
+case class BlackBet(@BeanProperty amount: BigDecimal) extends Bet {
   override protected def payoutMultiplier(pocket: Pocket): Int = if (pocket.isBlack) 1 else 0
 }
 
-case class Roulette(random: () => Pocket, wallet: Wallet, pocket: Pocket = Pocket(0), bets: List[Bet] = List()) {
+object Roulette {
+  def randomPocket(random: Random): () => Pocket = () => Pocket(random.nextInt(37))
+}
+
+case class Roulette(random: () => Pocket, wallet: Wallet, @BeanProperty pocket: Pocket = Pocket(0), @BeanProperty bets: List[Bet] = List()) {
   def addBet(bet: Bet): Roulette = {
     wallet.wager(bet.amount)
     copy(bets = bet :: bets)
@@ -59,8 +66,8 @@ case class Roulette(random: () => Pocket, wallet: Wallet, pocket: Pocket = Pocke
       _.payout(roulette.pocket)
     }
       .foreach {
-      wallet.payout
-    }
+        wallet.payout
+      }
     roulette
   }
 }
