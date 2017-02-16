@@ -1,30 +1,32 @@
 package gf.roulette
 
 import gf.core.SimpleWallet
-import org.junit.Assert.assertEquals
+import org.junit.Assert._
 import org.junit.Test
 
 class RouletteTest {
   private val wallet = SimpleWallet()
-  private val winningPocket = Pocket(1)
-  private val losingPocket = Pocket(20)
   private val random = () => winningPocket
   private val roulette = Roulette(random = random, wallet = wallet)
   private val wager = BigDecimal(10)
-  private val winningBet = NumberBet(wager, winningPocket)
-  private val losingBet = NumberBet(wager, losingPocket)
+  private var winningPocket = Pocket(1)
+  private var losingPocket = Pocket(20)
 
   @Test def pocketCanBeZero(): Unit = Pocket(0)
 
-
   @Test def pocketCanBe36(): Unit = Pocket(36)
+
+  @Test def pocket0IsNotRed(): Unit = assertFalse(Pocket(0).isRed)
+
+  @Test def pocket19IsRed(): Unit = assertTrue(Pocket(19).isRed)
+
+  @Test def pocket33IsNotRed(): Unit = assertFalse(Pocket(33).isRed)
 
   @Test(expected = classOf[IllegalArgumentException]) def pocketCannotBeNegative(): Unit =
     Pocket(-1)
 
   @Test(expected = classOf[IllegalArgumentException]) def pocketCannotBe37(): Unit =
     Pocket(37)
-
 
   @Test(expected = classOf[IllegalArgumentException]) def cannotBetOnZero() = {
     roulette.addBet(NumberBet(wager, Pocket(0)))
@@ -34,10 +36,16 @@ class RouletteTest {
     roulette.addBet(NumberBet(wager, Pocket(37)))
   }
 
+  @Test(expected = classOf[IllegalArgumentException]) def wagerAmountCannotBetNegative() = {
+    roulette.addBet(NumberBet(BigDecimal(-1), winningPocket))
+  }
+
   @Test def addingBetDecreasesBalance() = {
-    roulette.addBet(winningBet)
+    roulette.addBet(winningBet())
     assertEquals(BigDecimal(990), wallet.getBalance)
   }
+
+  private def winningBet() = NumberBet(wager, winningPocket)
 
   @Test def addedBetIsAdded() = {
     val bet = NumberBet(wager, Pocket(1))
@@ -46,26 +54,42 @@ class RouletteTest {
   }
 
   @Test def spinClearsBets() = {
-    roulette.addBet(winningBet)
+    roulette.addBet(winningBet())
     roulette.spin()
     assertEquals(List.empty, roulette.bets)
   }
 
   @Test def spinEmptiesBet() = {
-    roulette.addBet(winningBet)
+    roulette.addBet(winningBet())
     roulette.spin()
     assertEquals(List.empty, roulette.bets)
   }
 
   @Test def losingBetDoesNotPayout() = {
-    roulette.addBet(losingBet)
+    roulette.addBet(losingBet())
     roulette.spin()
     assertEquals(BigDecimal(990), wallet.getBalance)
   }
 
-  @Test def winningNumberBetPays35x() = {
-    roulette.addBet(winningBet)
+  private def losingBet() = NumberBet(wager, losingPocket)
+
+  @Test def winningNumberBetPays36x() = {
+    roulette.addBet(winningBet())
     roulette.spin()
-    assertEquals(BigDecimal(990 + 350), wallet.getBalance)
+    assertEquals(BigDecimal(990 + 360), wallet.getBalance)
   }
+
+  @Test def winningRedBetPaysEvens() = {
+    roulette.addBet(RedBet(wager))
+    roulette.spin()
+    assertEquals(BigDecimal(1010), wallet.getBalance)
+  }
+
+  @Test def losingRedBetPaysZero() = {
+    winningPocket = Pocket(20)
+    roulette.addBet(RedBet(wager))
+    roulette.spin()
+    assertEquals(BigDecimal(990), wallet.getBalance)
+  }
+
 }

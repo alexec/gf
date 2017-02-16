@@ -42,7 +42,7 @@
                             <goal>mutationCoverage</goal>
                         </goals>
                         <configuration>
-                            <coverageThreshold>94</coverageThreshold>
+                            <coverageThreshold>93</coverageThreshold>
                             <mutationThreshold>20</mutationThreshold>
                         </configuration>
                     </execution>
