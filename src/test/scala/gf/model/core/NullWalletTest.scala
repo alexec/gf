@@ -1,4 +1,4 @@
-package gf.core
+package gf.model.core
 
 import org.junit.Assert.assertEquals
 import org.junit.Test

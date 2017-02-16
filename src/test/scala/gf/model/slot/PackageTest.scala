@@ -1,4 +1,4 @@
-package gf.core
+package gf.model.slot
 
 import org.junit.Assert._
 import org.junit.Test

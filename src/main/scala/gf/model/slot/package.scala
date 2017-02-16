@@ -1,9 +1,7 @@
-package gf
-
-import gf.core.Sym
+package gf.model
 
 package object slot {
-  // slot
+  type Sym = Int
   type Reel = List[Sym]
   type Reels = List[Reel]
   type Window = List[Reel]
@@ -13,5 +11,6 @@ package object slot {
   type PayLines = List[PayLine]
   // number of symbol (3,4,5) to payout multiplier
   type PayTable = Map[(Sym, Int), Int]
+  val wild: Sym = 0
 
 }

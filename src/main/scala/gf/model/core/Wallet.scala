@@ -1,4 +1,4 @@
-package gf.core
+package gf.model.core
 
 trait Wallet {
 

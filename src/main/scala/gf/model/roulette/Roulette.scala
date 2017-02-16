@@ -1,6 +1,6 @@
-package gf.roulette
+package gf.model.roulette
 
-import gf.core.Wallet
+import gf.model.core.Wallet
 
 
 sealed case class Pocket(number: Int) {

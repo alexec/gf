@@ -1,13 +1,28 @@
-package gf.slot
+package gf.model.slot
 
-import gf.core.SimpleWallet
+import gf.model.core.SimpleWallet
 import org.junit.Assert._
 import org.junit.{Before, Test}
 
 class SlotTest {
+
+  private val reels = List(
+    List(4, 1, 2, 6, 3, 7, 9, 8, 4),
+    List(8, 1, 2, 6),
+    List(8, 1, 8, 2, 5, 3),
+    List(6, 1, 2, 8, 5, 6, 2),
+    List(4, 1, 2, 9, 6, 0, 1)
+  )
+
+  private val payLines = List(List(1, 1, 1, 1, 1))
+
+  private val payTable = Map(
+    (8, 5) -> 3
+  )
+
   private val stops = List(6, 3, 1, 2, 4)
   private val wallet = SimpleWallet()
-  private val slot = new TestSlotFactory(_ => stops, wallet).toGame(None)
+  private val slot = Slot(_ => stops, wallet, reels, payTable, payLines)
 
   @Before def before(): Unit = slot.spin(BigDecimal(1))
 

@@ -1,6 +1,6 @@
-package gf.slot
+package gf.model.slot
 
-import gf.core.{Game, Sym, Wallet, wild}
+import gf.model.core.Wallet
 
 
 case class Slot(
@@ -10,7 +10,7 @@ case class Slot(
                  payTable: PayTable,
                  payLines: PayLines,
                  var stops: Stops = List(0, 0, 0, 0, 0)
-               ) extends Game {
+               ) {
 
   def spin(amount: BigDecimal): Unit = {
 

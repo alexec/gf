@@ -1,6 +1,6 @@
-package gf.roulette
+package gf.model.roulette
 
-import gf.core.SimpleWallet
+import gf.model.core.SimpleWallet
 import org.junit.Assert._
 import org.junit.Test
 
@@ -51,6 +51,8 @@ class RouletteTest {
     assertEquals(BigDecimal(990), wallet.getBalance)
   }
 
+  private def winningBet() = NumberBet(wager, winningPocket)
+
   @Test def addedBetIsAdded() = {
     val bet = NumberBet(wager, Pocket(1))
     roulette.addBet(bet)
@@ -68,8 +70,6 @@ class RouletteTest {
     roulette.spin()
     assertEquals(List.empty, roulette.bets)
   }
-
-  private def winningBet() = NumberBet(wager, winningPocket)
 
   @Test def losingBetDoesNotPayout() = {
     roulette.addBet(losingBet())
