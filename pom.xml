@@ -26,9 +26,6 @@
                             <goal>compile</goal>
                             <goal>testCompile</goal>
                         </goals>
-                        <configuration>
-                            <
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
