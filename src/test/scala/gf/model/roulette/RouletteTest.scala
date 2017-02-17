@@ -4,6 +4,8 @@ import gf.model.core.{Money, SimpleWallet}
 import org.junit.Assert._
 import org.junit.Test
 
+import scala.util.Random
+
 class RouletteTest {
   private val wallet = SimpleWallet()
   private val wager = Money(10)
@@ -12,6 +14,10 @@ class RouletteTest {
   private val roulette = Roulette(random = random, wallet = wallet)
   private var winningPocket = Pocket(1)
   private var losingPocket = Pocket(20)
+
+  @Test def randomPacket(): Unit = {
+    assertEquals(Pocket(6), Roulette.randomPocket(new Random(0))())
+  }
 
   @Test(expected = classOf[IllegalArgumentException]) def cannotBetOnZero(): Unit = {
     roulette.addBet(NumberBet(wager, Pocket(0)))

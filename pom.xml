@@ -26,18 +26,9 @@
                             <goal>compile</goal>
                             <goal>testCompile</goal>
                         </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-failsafe-plugin</artifactId>
-                <version>2.19.1</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>integration-test</goal>
-                            <goal>verify</goal>
-                        </goals>
+                        <configuration>
+                            <
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -71,6 +62,18 @@
                 <configuration>
                     <timestampedReports>false</timestampedReports>
                 </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>2.19.1</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>

@@ -30,7 +30,7 @@ class RouletteControllerIT {
       .get("/roulette")
       .then()
       .statusCode(200)
-      .body("pocket.number", equalTo(0))
+      .body("pocket", equalTo(0))
   }
 
   @Test def addBet(): Unit = {
@@ -46,7 +46,6 @@ class RouletteControllerIT {
       .get("/roulette")
       .then()
       .statusCode(200)
-      .body("bets", equalTo(0))
   }
 
 }

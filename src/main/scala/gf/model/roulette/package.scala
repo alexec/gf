@@ -21,7 +21,7 @@ package object roulette {
     def apply(number: Int): Pocket = {
       require(number >= 0)
       require(number <= 36)
-      Pocket(number)
+      new Pocket(number)
     }
   }
 
