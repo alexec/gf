@@ -2,7 +2,7 @@ package gf.model.core
 
 import org.junit.Test
 
-class CorePackageTest {
+class MoneyTest {
 
   @Test def moneyCannotBe2dp(): Unit = Money(0.01)
 

@@ -2,18 +2,18 @@ package gf.model.core
 
 trait Wallet {
 
-  def wager(amount: BigDecimal)
+  def wager(amount: Money)
 
-  def payout(amount: BigDecimal)
+  def payout(amount: Money)
 
-  def getBalance: BigDecimal
+  def getBalance: Money
 
 }
 
 object NullWallet extends Wallet {
-  override val getBalance = BigDecimal(0)
+  override val getBalance = Money(0)
 
-  override def payout(amount: BigDecimal): Unit = {}
+  override def payout(amount: Money): Unit = {}
 
-  override def wager(amount: BigDecimal): Unit = {}
+  override def wager(amount: Money): Unit = {}
 }

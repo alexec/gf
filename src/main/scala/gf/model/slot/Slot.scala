@@ -1,6 +1,6 @@
 package gf.model.slot
 
-import gf.model.core.Wallet
+import gf.model.core.{Money, Wallet}
 
 
 case class Slot(
@@ -43,7 +43,7 @@ case class Slot(
     .filter { case (_, x) => x.isDefined }
     .map { case (line, x) => (line, x.get) }
 
-  def spin(amount: BigDecimal): Slot = {
+  def spin(amount: Money): Slot = {
 
     wallet.wager(amount)
 

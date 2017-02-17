@@ -21,7 +21,9 @@ class PocketTest {
 
   @Test def pocket33IsBlack(): Unit = assertTrue(Pocket(33).isBlack)
 
-  @Test(expected = classOf[IllegalArgumentException]) def pocketCannotBeNegative(): Unit = Pocket(-1)
+  @Test(expected = classOf[IllegalArgumentException]) def pocketCannotBeNegative(): Unit = {
+    Pocket(-1)
+  }
 
   @Test(expected = classOf[IllegalArgumentException]) def pocketCannotBe37(): Unit = Pocket(37)
 }

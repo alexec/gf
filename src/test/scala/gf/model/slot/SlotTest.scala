@@ -1,6 +1,6 @@
 package gf.model.slot
 
-import gf.model.core.SimpleWallet
+import gf.model.core.{Money, SimpleWallet}
 import org.junit.Assert._
 import org.junit.Test
 
@@ -23,10 +23,10 @@ class SlotTest {
   private val stops = List(6, 3, 1, 2, 4)
   private val wallet = SimpleWallet()
   private val slot = Slot(_ => stops, wallet, reels, payTable, payLines)
-    .spin(BigDecimal(1))
+    .spin(Money(1))
 
   @Test
-  def balanceReduced() = assertEquals(BigDecimal(1002), wallet.balance)
+  def balanceReduced() = assertEquals(Money(1002), wallet.balance)
 
   @Test
   def stopsAreSame() = assertEquals(stops, slot.stops)
