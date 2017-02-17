@@ -19,4 +19,5 @@ class NullWalletTest {
     NullWallet.wager(Money(10))
     balanceIsZero()
   }
+
 }

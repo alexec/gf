@@ -18,9 +18,11 @@ package object roulette {
   }
 
   object Pocket {
+    val MAX: Int = 36
+
     def apply(number: Int): Pocket = {
       require(number >= 0)
-      require(number <= 36)
+      require(number <= MAX)
       new Pocket(number)
     }
   }
