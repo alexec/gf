@@ -7,7 +7,7 @@ import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation._
 
 @RestController
-@RequestMapping(Array("/roulette"))
+@RequestMapping(Array("/games/roulette"))
 class RouletteController(repo: RouletteRepo, wallet: Wallet) {
 
   @DeleteMapping

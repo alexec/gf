@@ -18,7 +18,7 @@ class RouletteControllerIT extends IntegrationTest {
       .`then`()
       .statusCode(204)
 
-    RestAssured.basePath = "/roulette"
+    RestAssured.basePath = "/gams/roulette"
 
     given()
       .when()
@@ -29,7 +29,7 @@ class RouletteControllerIT extends IntegrationTest {
 
   @Test def balance(): Unit = {
     given()
-      .get("../service/wallet")
+      .get("../../service/wallet")
       .`then`()
       .statusCode(200)
       .body("balance", equalTo(1000))
@@ -43,7 +43,7 @@ class RouletteControllerIT extends IntegrationTest {
       .statusCode(201)
 
     given()
-      .get("../service/wallet")
+      .get("../../service/wallet")
       .`then`()
       .statusCode(200)
       .body("balance", equalTo(990))
