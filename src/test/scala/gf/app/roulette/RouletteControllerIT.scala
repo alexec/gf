@@ -21,6 +21,12 @@ class RouletteControllerIT {
   @Before def before(): Unit = {
     RestAssured.port = port
     RestAssured.enableLoggingOfRequestAndResponseIfValidationFails()
+
+    given()
+      .when()
+      .delete("/roulette")
+      .then()
+      .statusCode(204)
   }
 
   //noinspection AccessorLikeMethodIsUnit
@@ -46,6 +52,8 @@ class RouletteControllerIT {
       .get("/roulette")
       .then()
       .statusCode(200)
+    // .body("bets[0].amount", equalTo(10))
+    //.body("bets[0].number", equalTo(19))
   }
 
 }

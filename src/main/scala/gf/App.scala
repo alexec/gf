@@ -1,10 +1,14 @@
 package gf
 
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.module.scala.DefaultScalaModule
+import com.mongodb.MongoClient
 import gf.app.roulette.RouletteController
-import gf.infra.RouletteRepo
+import gf.infra.roulette.RouletteRepo
 import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.context.PropertyPlaceholderAutoConfiguration
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration
+import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
 import org.springframework.boot.autoconfigure.web._
 import org.springframework.context.annotation.{Bean, Configuration, Import}
 
@@ -25,11 +29,14 @@ object App {
   classOf[JacksonAutoConfiguration],
   classOf[ServerPropertiesAutoConfiguration],
   classOf[PropertyPlaceholderAutoConfiguration],
-  classOf[WebMvcAutoConfiguration]
+  classOf[WebMvcAutoConfiguration],
+  classOf[MongoAutoConfiguration]
 )) class App {
-  @Bean def gameRepo = new RouletteRepo
+  @Bean def objectMapper(): ObjectMapper = new ObjectMapper().registerModule(DefaultScalaModule)
 
-  @Bean def playController(rouletteRepo: RouletteRepo) = new RouletteController(rouletteRepo)
+  @Bean def rouletteRepo(mongo: MongoClient): RouletteRepo = new RouletteRepo(mongo)
+
+  @Bean def rouletteController(repo: RouletteRepo): RouletteController = new RouletteController(repo)
 }
 
 
