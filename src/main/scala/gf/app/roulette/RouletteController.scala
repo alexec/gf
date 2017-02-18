@@ -1,10 +1,8 @@
 package gf.app.roulette
 
-import java.math.MathContext
-
 import gf.infra.roulette.RouletteRepo
 import gf.model.core.Money
-import gf.model.roulette.{NumberBet, Pocket}
+import gf.model.roulette._
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation._
 
@@ -24,14 +22,25 @@ class RouletteController(repo: RouletteRepo) {
       "pocket" -> roulette.pocket.number,
       "bets" -> roulette.bets.map {
         case NumberBet(amount, pocket) => Map("type" -> "number", "number" -> pocket.number, "amount" -> amount)
-        case _ => Map()
+        case RedBet(amount) => Map("type" -> "red", "amount" -> amount)
+        case BlackBet(amount) => Map("type" -> "black", "amount" -> amount)
       }
     )
   }
 
   @PostMapping(Array("/bets/numbers"))
   @ResponseStatus(HttpStatus.CREATED)
-  def addNumbersBet(@RequestParam("amount") amount: String, @RequestParam("number") number: Int): Unit = {
-    repo.set(repo.get().addBet(NumberBet(Money(BigDecimal(amount, MathContext.UNLIMITED)), Pocket(number))))
-  }
+  def addNumbersBet(@RequestParam("amount") amount: Money, @RequestParam("number") number: Int): Unit =
+    addBet(NumberBet(amount, Pocket(number)))
+
+  @PostMapping(Array("/bets/red"))
+  @ResponseStatus(HttpStatus.CREATED)
+  def addRedBet(@RequestParam("amount") amount: Money): Unit = addBet(RedBet(amount))
+
+  private def addBet(bet: Bet) = repo.set(repo.get().addBet(bet))
+
+  @PostMapping(Array("/bets/black"))
+  @ResponseStatus(HttpStatus.CREATED)
+  def addBlackBet(@RequestParam("amount") amount: Money): Unit = addBet(BlackBet(amount))
+
 }

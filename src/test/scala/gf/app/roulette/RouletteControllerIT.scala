@@ -1,5 +1,6 @@
 package gf.app.roulette
 
+import gf.Config
 import io.restassured.RestAssured
 import io.restassured.RestAssured.given
 import org.hamcrest.Matchers.equalTo
@@ -12,7 +13,7 @@ import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit4.SpringRunner
 
 @RunWith(classOf[SpringRunner])
-@ContextConfiguration(classes = Array(classOf[gf.Config]))
+@ContextConfiguration(classes = Array(classOf[Config]))
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 class RouletteControllerIT {
 
@@ -25,7 +26,7 @@ class RouletteControllerIT {
     given()
       .when()
       .delete("/roulette")
-      .then()
+      .`then`()
       .statusCode(204)
   }
 
@@ -34,27 +35,58 @@ class RouletteControllerIT {
     given()
       .when()
       .get("/roulette")
-      .then()
+      .`then`()
       .statusCode(200)
       .body("pocket", equalTo(0))
   }
 
-  @Test def addBet(): Unit = {
+  @Test def addNumberBet(): Unit = {
     given()
       .param("amount", "10")
       .param("number", "19")
       .when()
       .post("/roulette/bets/numbers")
-      .then()
+      .`then`()
       .statusCode(201)
     given()
       .when()
       .get("/roulette")
-      .then()
+      .`then`()
       .statusCode(200)
       .body("bets[0].type", equalTo("number"))
       .body("bets[0].amount", equalTo(10))
       .body("bets[0].number", equalTo(19))
   }
 
+  @Test def addRedBet(): Unit = {
+    given()
+      .param("amount", "10")
+      .when()
+      .post("/roulette/bets/red")
+      .`then`()
+      .statusCode(201)
+    given()
+      .when()
+      .get("/roulette")
+      .`then`()
+      .statusCode(200)
+      .body("bets[0].type", equalTo("red"))
+      .body("bets[0].amount", equalTo(10))
+  }
+
+  @Test def addBlackBet(): Unit = {
+    given()
+      .param("amount", "10")
+      .when()
+      .post("/roulette/bets/black")
+      .`then`()
+      .statusCode(201)
+    given()
+      .when()
+      .get("/roulette")
+      .`then`()
+      .statusCode(200)
+      .body("bets[0].type", equalTo("black"))
+      .body("bets[0].amount", equalTo(10))
+  }
 }
