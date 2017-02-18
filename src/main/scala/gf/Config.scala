@@ -41,9 +41,7 @@ object Config {
       .registerModule(DefaultScalaModule)
       .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false))
 
-  @Bean def rouletteRepo(mongo: MongoClient) = new RouletteRepo(mongo)
-
-  @Bean def rouletteController(repo: RouletteRepo) = new RouletteController(repo)
+  @Bean def rouletteController(mongo: MongoClient) = new RouletteController(new RouletteRepo(mongo))
 }
 
 
