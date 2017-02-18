@@ -1,28 +1,17 @@
 package gf.app.roulette
 
-import gf.Config
+import gf.app.IntegrationTest
 import io.restassured.RestAssured
 import io.restassured.RestAssured.given
 import org.hamcrest.Matchers.{equalTo, notNullValue}
-import org.junit.runner.RunWith
 import org.junit.{Before, Test}
-import org.springframework.boot.context.embedded.LocalServerPort
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT
-import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.junit4.SpringRunner
 
-@RunWith(classOf[SpringRunner])
-@ContextConfiguration(classes = Array(classOf[Config]))
-@SpringBootTest(webEnvironment = RANDOM_PORT)
-class RouletteControllerIT {
+class RouletteControllerIT extends IntegrationTest {
 
-  @LocalServerPort var port: Int = _
+  @Before override def before(): Unit = {
+    super.before()
 
-  @Before def before(): Unit = {
-    RestAssured.port = port
     RestAssured.basePath = "/roulette"
-    RestAssured.enableLoggingOfRequestAndResponseIfValidationFails()
 
     given()
       .when()

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.{DeserializationFeature, ObjectMapper}
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import com.fasterxml.jackson.module.scala.experimental.ScalaObjectMapper
 import com.mongodb.MongoClient
+import gf.app.core.ServiceController
 import gf.app.roulette.RouletteController
 import gf.infra.roulette.RouletteRepo
 import gf.model.core.Money
@@ -45,6 +46,8 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
       }
     }
   }
+
+  @Bean def serviceController() = new ServiceController
 
   @Bean def rouletteController(mongo: MongoClient) = new RouletteController(new RouletteRepo(mongo))
 }
