@@ -9,21 +9,22 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation._
 
-@RestController //(Array("/roulette"))
+@RestController
+@RequestMapping(Array("/roulette"))
 class RouletteController(@Autowired val repo: RouletteRepo) {
 
-  @DeleteMapping(Array("/roulette"))
+  @DeleteMapping
   @ResponseStatus(HttpStatus.NO_CONTENT)
   def delete(): Unit = {
     repo.delete()
   }
 
-  @GetMapping(Array("/roulette"))
+  @GetMapping
   def get(): Roulette = {
     repo.get()
   }
 
-  @PostMapping(value = Array("/roulette/bets/numbers"))
+  @PostMapping(Array("/bets/numbers"))
   @ResponseStatus(HttpStatus.CREATED)
   def addNumbersBet(@RequestParam("amount") amount: String, @RequestParam("number") number: Int): Unit = {
     repo.set(repo.get().addBet(NumberBet(Money(BigDecimal(amount, MathContext.UNLIMITED)), Pocket(number))))
