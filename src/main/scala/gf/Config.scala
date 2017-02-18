@@ -6,8 +6,9 @@ import com.fasterxml.jackson.module.scala.experimental.ScalaObjectMapper
 import com.mongodb.MongoClient
 import gf.app.core.ServiceController
 import gf.app.roulette.RouletteController
+import gf.infra.core.DemoWallet
 import gf.infra.roulette.RouletteRepo
-import gf.model.core.Money
+import gf.model.core.{Money, Wallet}
 import org.springframework.boot.autoconfigure.context.PropertyPlaceholderAutoConfiguration
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
@@ -30,6 +31,7 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
   classOf[PropertyPlaceholderAutoConfiguration],
   classOf[WebMvcAutoConfiguration],
   classOf[MongoAutoConfiguration]
+  //,classOf[SessionAutoConfiguration]
 )) class Config {
 
   @Bean def mappingJackson2HttpMessageConverter() =
@@ -38,18 +40,15 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
       .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false))
 
 
-  @Bean def stringToMoney() = {
-    new Converter[String, Money] {
-
-      override def convert(source: String): Money = {
-        Money(BigDecimal(source))
-      }
-    }
+  @Bean def stringToMoney() = new Converter[String, Money] {
+    override def convert(source: String): Money = Money(BigDecimal(source))
   }
 
-  @Bean def serviceController() = new ServiceController
+  @Bean def wallet() = new DemoWallet()
 
-  @Bean def rouletteController(mongo: MongoClient) = new RouletteController(new RouletteRepo(mongo))
+  @Bean def serviceController(wallet: Wallet) = new ServiceController(wallet)
+
+  @Bean def rouletteController(mongo: MongoClient, wallet: Wallet) = new RouletteController(new RouletteRepo(mongo), wallet)
 }
 
 

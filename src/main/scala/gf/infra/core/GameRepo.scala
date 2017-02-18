@@ -5,8 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper.DefaultTyping
 import com.fasterxml.jackson.databind.{DeserializationFeature, ObjectMapper}
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import com.fasterxml.jackson.module.scala.experimental.ScalaObjectMapper
+import com.mongodb.client.model.UpdateOptions
 import com.mongodb.util.JSON
-import com.mongodb.{BasicDBObject, MongoClient}
+import com.mongodb.{BasicDBObject, MongoClient, WriteConcern}
 import gf.model.core.Wallet
 import org.bson.Document
 import org.springframework.stereotype.Repository
@@ -19,23 +20,25 @@ class GameRepo[G, S](mongo: MongoClient, gameName: String, factory: GameFactory[
     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
     .registerModule(DefaultScalaModule)
     .enableDefaultTyping(DefaultTyping.OBJECT_AND_NON_CONCRETE, JsonTypeInfo.As.PROPERTY)
-  private val collection = mongo.getDatabase(gameName).getCollection("state")
+  private val collection = mongo.getDatabase(gameName).getCollection("state").withWriteConcern(WriteConcern.JOURNALED)
+  private val filter = new BasicDBObject()
+
+  private val upsert = new UpdateOptions().upsert(true)
 
   def set(game: G): Unit = {
     val state = factory.toMaybeState(game)
     if (state.isDefined) {
-      val json = mapper.writeValueAsString(state.get)
-      collection.insertOne(Document.parse(json))
-    }
-    else
+      collection.replaceOne(filter, Document.parse(mapper.writeValueAsString(state.get)), upsert)
+    } else {
       delete()
+    }
   }
 
-  def delete(): Unit = collection.deleteOne(new BasicDBObject())
+  def delete(): Unit = collection.deleteOne(filter)
 
   def get(wallet: Wallet)(implicit ev: Manifest[S]): G = {
 
-    val cursor = collection.find().iterator()
+    val cursor = collection.find(filter).iterator()
 
     if (cursor.hasNext) {
       factory.toGame(wallet, Some(mapper.readValue(JSON.serialize(cursor.next()), ev.runtimeClass).asInstanceOf[S]))

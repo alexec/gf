@@ -16,4 +16,6 @@ case class DemoWallet(var balance: Money = defaultBalance) extends Wallet {
   override def payout(amount: Money): Unit = balance = balance + amount
 
   override def getBalance: Money = balance
+
+  def setBalance(amount: Money): Unit = balance = amount
 }

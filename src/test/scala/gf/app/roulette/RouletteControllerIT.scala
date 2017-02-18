@@ -11,6 +11,13 @@ class RouletteControllerIT extends IntegrationTest {
   @Before override def before(): Unit = {
     super.before()
 
+    given()
+      .param("balance", "1000")
+      .when()
+      .put("/service/wallet")
+      .`then`()
+      .statusCode(204)
+
     RestAssured.basePath = "/roulette"
 
     given()
@@ -18,6 +25,28 @@ class RouletteControllerIT extends IntegrationTest {
       .delete()
       .`then`()
       .statusCode(204)
+  }
+
+  @Test def balance(): Unit = {
+    given()
+      .get("../service/wallet")
+      .`then`()
+      .statusCode(200)
+      .body("balance", equalTo(1000))
+
+    given()
+      .param("amount", "10")
+      .param("number", "19")
+      .when()
+      .post("/bets/numbers")
+      .`then`()
+      .statusCode(201)
+
+    given()
+      .get("../service/wallet")
+      .`then`()
+      .statusCode(200)
+      .body("balance", equalTo(990))
   }
 
   //noinspection AccessorLikeMethodIsUnit
