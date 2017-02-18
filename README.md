@@ -1,1 +1,1 @@
-[![Build Status](https://travis-ci.org/alexec/gf.svg?branch=master)](https://travis-ci.org/alexec/gf)
+[![Build Status](https://travis-ci.org/helios-games/gf.svg?branch=master)](https://travis-ci.org/helios-games/gf)
