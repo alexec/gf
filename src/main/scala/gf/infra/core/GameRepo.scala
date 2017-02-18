@@ -7,6 +7,7 @@ import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import com.fasterxml.jackson.module.scala.experimental.ScalaObjectMapper
 import com.mongodb.util.JSON
 import com.mongodb.{BasicDBObject, MongoClient}
+import gf.model.core.Wallet
 import org.bson.Document
 import org.springframework.stereotype.Repository
 
@@ -32,14 +33,14 @@ class GameRepo[G, S](mongo: MongoClient, gameName: String, factory: GameFactory[
 
   def delete(): Unit = collection.deleteOne(new BasicDBObject())
 
-  def get()(implicit ev: Manifest[S]): G = {
+  def get(wallet: Wallet)(implicit ev: Manifest[S]): G = {
 
     val cursor = collection.find().iterator()
 
     if (cursor.hasNext) {
-      factory.toGame(Some(mapper.readValue(JSON.serialize(cursor.next()), ev.runtimeClass).asInstanceOf[S]))
+      factory.toGame(wallet, Some(mapper.readValue(JSON.serialize(cursor.next()), ev.runtimeClass).asInstanceOf[S]))
     } else {
-      factory.toGame(None)
+      factory.toGame(wallet, None)
     }
   }
 }

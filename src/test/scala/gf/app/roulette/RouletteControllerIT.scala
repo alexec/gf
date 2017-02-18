@@ -3,7 +3,7 @@ package gf.app.roulette
 import gf.Config
 import io.restassured.RestAssured
 import io.restassured.RestAssured.given
-import org.hamcrest.Matchers.equalTo
+import org.hamcrest.Matchers.{equalTo, notNullValue}
 import org.junit.runner.RunWith
 import org.junit.{Before, Test}
 import org.springframework.boot.context.embedded.LocalServerPort
@@ -21,11 +21,12 @@ class RouletteControllerIT {
 
   @Before def before(): Unit = {
     RestAssured.port = port
+    RestAssured.basePath = "/roulette"
     RestAssured.enableLoggingOfRequestAndResponseIfValidationFails()
 
     given()
       .when()
-      .delete("/roulette")
+      .delete()
       .`then`()
       .statusCode(204)
   }
@@ -34,7 +35,7 @@ class RouletteControllerIT {
   @Test def getRoulette(): Unit = {
     given()
       .when()
-      .get("/roulette")
+      .get()
       .`then`()
       .statusCode(200)
       .body("pocket", equalTo(0))
@@ -45,12 +46,13 @@ class RouletteControllerIT {
       .param("amount", "10")
       .param("number", "19")
       .when()
-      .post("/roulette/bets/numbers")
+      .post("/bets/numbers")
       .`then`()
       .statusCode(201)
+      .body("balance", notNullValue())
     given()
       .when()
-      .get("/roulette")
+      .get()
       .`then`()
       .statusCode(200)
       .body("bets[0].type", equalTo("number"))
@@ -62,12 +64,13 @@ class RouletteControllerIT {
     given()
       .param("amount", "10")
       .when()
-      .post("/roulette/bets/red")
+      .post("/bets/red")
       .`then`()
       .statusCode(201)
+      .body("balance", notNullValue())
     given()
       .when()
-      .get("/roulette")
+      .get()
       .`then`()
       .statusCode(200)
       .body("bets[0].type", equalTo("red"))
@@ -78,15 +81,31 @@ class RouletteControllerIT {
     given()
       .param("amount", "10")
       .when()
-      .post("/roulette/bets/black")
+      .post("/bets/black")
       .`then`()
       .statusCode(201)
+      .body("balance", notNullValue())
     given()
       .when()
-      .get("/roulette")
+      .get()
       .`then`()
       .statusCode(200)
       .body("bets[0].type", equalTo("black"))
       .body("bets[0].amount", equalTo(10))
+  }
+
+  @Test def spin(): Unit = {
+    given()
+      .param("amount", "10")
+      .when()
+      .post("/bets/black")
+      .`then`()
+      .statusCode(201)
+    given()
+      .when()
+      .put("/spin")
+      .`then`()
+      .statusCode(200)
+      .body("balance", notNullValue())
   }
 }
