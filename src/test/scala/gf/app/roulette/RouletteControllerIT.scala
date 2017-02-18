@@ -12,7 +12,7 @@ import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit4.SpringRunner
 
 @RunWith(classOf[SpringRunner])
-@ContextConfiguration(classes = Array(classOf[gf.App]))
+@ContextConfiguration(classes = Array(classOf[gf.Config]))
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 class RouletteControllerIT {
 
@@ -52,8 +52,9 @@ class RouletteControllerIT {
       .get("/roulette")
       .then()
       .statusCode(200)
-    // .body("bets[0].amount", equalTo(10))
-    //.body("bets[0].number", equalTo(19))
+      .body("bets[0].type", equalTo("number"))
+      .body("bets[0].amount", equalTo(10))
+      .body("bets[0].number", equalTo(19))
   }
 
 }

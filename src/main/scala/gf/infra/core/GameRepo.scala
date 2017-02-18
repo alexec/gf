@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.fasterxml.jackson.databind.ObjectMapper.DefaultTyping
 import com.fasterxml.jackson.databind.{DeserializationFeature, ObjectMapper}
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
+import com.fasterxml.jackson.module.scala.experimental.ScalaObjectMapper
 import com.mongodb.util.JSON
 import com.mongodb.{BasicDBObject, MongoClient}
 import org.bson.Document
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Repository
 @Repository
 class GameRepo[G, S](mongo: MongoClient, gameName: String, factory: GameFactory[G, S]) {
 
-  private val mapper = new ObjectMapper()
+  private val mapper = (new ObjectMapper() with ScalaObjectMapper)
     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
     .registerModule(DefaultScalaModule)
     .enableDefaultTyping(DefaultTyping.OBJECT_AND_NON_CONCRETE, JsonTypeInfo.As.PROPERTY)

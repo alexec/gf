@@ -1,7 +1,8 @@
 package gf
 
-import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.{DeserializationFeature, ObjectMapper}
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
+import com.fasterxml.jackson.module.scala.experimental.ScalaObjectMapper
 import com.mongodb.MongoClient
 import gf.app.roulette.RouletteController
 import gf.infra.roulette.RouletteRepo
@@ -11,14 +12,16 @@ import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration
 import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
 import org.springframework.boot.autoconfigure.web._
 import org.springframework.context.annotation.{Bean, Configuration, Import}
+import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter
 
-object App {
+object Config {
   def main(args: Array[String]) {
-    new SpringApplication(classOf[App])
+    new SpringApplication(classOf[Config])
       .run()
   }
 }
 
+//noinspection TypeAnnotation
 @Configuration
 @Import(Array(
   classOf[DispatcherServletAutoConfiguration],
@@ -31,12 +34,16 @@ object App {
   classOf[PropertyPlaceholderAutoConfiguration],
   classOf[WebMvcAutoConfiguration],
   classOf[MongoAutoConfiguration]
-)) class App {
-  @Bean def objectMapper(): ObjectMapper = new ObjectMapper().registerModule(DefaultScalaModule)
+)) class Config {
 
-  @Bean def rouletteRepo(mongo: MongoClient): RouletteRepo = new RouletteRepo(mongo)
+  @Bean def mappingJackson2HttpMessageConverter() =
+    new MappingJackson2HttpMessageConverter((new ObjectMapper() with ScalaObjectMapper)
+      .registerModule(DefaultScalaModule)
+      .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false))
 
-  @Bean def rouletteController(repo: RouletteRepo): RouletteController = new RouletteController(repo)
+  @Bean def rouletteRepo(mongo: MongoClient) = new RouletteRepo(mongo)
+
+  @Bean def rouletteController(repo: RouletteRepo, mapper: ObjectMapper) = new RouletteController(repo, mapper)
 }
 
 
