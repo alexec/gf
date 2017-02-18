@@ -1,8 +1,10 @@
 package gf.model
 
+import scala.beans.BeanProperty
+
 package object roulette {
 
-  class Pocket(val number: Int) extends AnyVal {
+  class Pocket(@BeanProperty val number: Int) extends AnyVal {
 
     def isBlack: Boolean = number > 0 && !isRed
 

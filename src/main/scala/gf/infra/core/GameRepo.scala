@@ -1,5 +1,7 @@
 package gf.infra.core
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo
+import com.fasterxml.jackson.databind.ObjectMapper.DefaultTyping
 import com.fasterxml.jackson.databind.{DeserializationFeature, ObjectMapper}
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import com.mongodb.util.JSON
@@ -14,7 +16,7 @@ class GameRepo[G, S](mongo: MongoClient, gameName: String, factory: GameFactory[
   private val mapper = new ObjectMapper()
     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
     .registerModule(DefaultScalaModule)
-    .enableDefaultTyping()
+    .enableDefaultTyping(DefaultTyping.OBJECT_AND_NON_CONCRETE, JsonTypeInfo.As.PROPERTY)
   private val collection = mongo.getDatabase(gameName).getCollection("state")
 
   def set(game: G): Unit = {
