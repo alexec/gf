@@ -2,7 +2,6 @@ package gf.app.roulette
 
 import java.math.MathContext
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import gf.infra.roulette.RouletteRepo
 import gf.model.core.Money
 import gf.model.roulette.{NumberBet, Pocket}
@@ -12,7 +11,7 @@ import org.springframework.web.bind.annotation._
 
 @RestController
 @RequestMapping(Array("/roulette"))
-class RouletteController(@Autowired repo: RouletteRepo, @Autowired mapper: ObjectMapper) {
+class RouletteController(@Autowired repo: RouletteRepo) {
 
   @DeleteMapping
   @ResponseStatus(HttpStatus.NO_CONTENT)

@@ -43,7 +43,7 @@ object Config {
 
   @Bean def rouletteRepo(mongo: MongoClient) = new RouletteRepo(mongo)
 
-  @Bean def rouletteController(repo: RouletteRepo, mapper: ObjectMapper) = new RouletteController(repo, mapper)
+  @Bean def rouletteController(repo: RouletteRepo) = new RouletteController(repo)
 }
 
 
