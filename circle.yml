@@ -1,0 +1,8 @@
+machine:
+  java:
+    version: openjdk8
+delpoy:
+  prod:
+    branch: master
+    commands:
+      - ./run.sh
