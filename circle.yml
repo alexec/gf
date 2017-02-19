@@ -13,5 +13,6 @@ deployment:
   prod:
     branch: master
     commands:
+      - mvn package -Dexecutable
       - ./deploy.sh
-    - "curl -u $CIRCLE_TOKEN: -X POST https://circleci.com/api/v1.1/proj/github/helios-games/smoke/tree/master"
+      - "curl -u $CIRCLE_TOKEN: -X POST https://circleci.com/api/v1.1/proj/github/helios-games/smoke/tree/master"
