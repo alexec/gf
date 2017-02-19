@@ -38,18 +38,22 @@ class RouletteController(repo: RouletteRepo, wallet: Wallet) {
   @ResponseStatus(HttpStatus.CREATED)
   def addRedBet(@RequestParam("amount") amount: Money): Any = addBet(RedBet(amount))
 
+  @PostMapping(Array("/bets/black"))
+  @ResponseStatus(HttpStatus.CREATED)
+  def addBlackBet(@RequestParam("amount") amount: Money): Any = addBet(BlackBet(amount))
+
   private def addBet(bet: Bet) = {
     repo.set(repo.get(wallet).addBet(bet))
     Map("balance" -> wallet.getBalance)
   }
 
-  @PostMapping(Array("/bets/black"))
-  @ResponseStatus(HttpStatus.CREATED)
-  def addBlackBet(@RequestParam("amount") amount: Money): Any = addBet(BlackBet(amount))
-
   @PutMapping(Array("/spin"))
   def spin(): Any = {
-    repo.set(repo.get(wallet).spin())
-    Map("balance" -> wallet.getBalance)
+    val roulette = repo.get(wallet).spin()
+    repo.set(roulette)
+    Map(
+      "balance" -> wallet.getBalance,
+      "pocket" -> roulette.pocket.number
+    )
   }
 }

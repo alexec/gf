@@ -18,7 +18,7 @@ class RouletteControllerIT extends IntegrationTest {
       .`then`()
       .statusCode(204)
 
-    RestAssured.basePath = "/gams/roulette"
+    RestAssured.basePath = "/games/roulette"
 
     given()
       .when()
@@ -125,5 +125,6 @@ class RouletteControllerIT extends IntegrationTest {
       .`then`()
       .statusCode(200)
       .body("balance", notNullValue())
+      .body("pocket", notNullValue())
   }
 }
