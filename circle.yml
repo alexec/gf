@@ -9,3 +9,4 @@ deployment:
     branch: master
     commands:
       - ./run.sh
+      - curl -u $CIRCLE_TOKEN -X POST https://circleci.com/api/v1.1/project/helios-games/tree/master
