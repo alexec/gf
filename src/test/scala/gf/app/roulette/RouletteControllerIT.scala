@@ -38,7 +38,7 @@ class RouletteControllerIT extends IntegrationTest {
       .param("amount", "10")
       .param("number", "19")
       .when()
-      .post("/bets/numbers")
+      .post("/bets/number")
       .`then`()
       .statusCode(201)
 
@@ -64,7 +64,7 @@ class RouletteControllerIT extends IntegrationTest {
       .param("amount", "10")
       .param("number", "19")
       .when()
-      .post("/bets/numbers")
+      .post("/bets/number")
       .`then`()
       .statusCode(201)
       .body("balance", notNullValue())
