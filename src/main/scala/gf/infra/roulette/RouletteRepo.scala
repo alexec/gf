@@ -2,7 +2,7 @@ package gf.infra.roulette
 
 import java.security.SecureRandom
 
-import com.mongodb.MongoClient
+import com.mongodb.{MongoClient, WriteConcern}
 import gf.infra.core.{GameFactory, GameRepo}
 import gf.model.core.Wallet
 import gf.model.roulette.Roulette
@@ -22,4 +22,4 @@ private object RouletteGameFactory extends GameFactory[Roulette, State] {
   }
 }
 
-class RouletteRepo(mongo: MongoClient) extends GameRepo(mongo, "roulette", RouletteGameFactory)
+class RouletteRepo(mongo: MongoClient, writeConcern: WriteConcern) extends GameRepo(mongo, "roulette", RouletteGameFactory, writeConcern)

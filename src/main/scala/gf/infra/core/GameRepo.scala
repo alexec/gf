@@ -14,13 +14,14 @@ import org.springframework.stereotype.Repository
 
 
 @Repository
-class GameRepo[G, S](mongo: MongoClient, gameName: String, factory: GameFactory[G, S]) {
+class GameRepo[G, S](mongo: MongoClient, gameName: String, factory: GameFactory[G, S], writeConcern: WriteConcern) {
 
   private val mapper = (new ObjectMapper() with ScalaObjectMapper)
     .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
     .registerModule(DefaultScalaModule)
     .enableDefaultTyping(DefaultTyping.OBJECT_AND_NON_CONCRETE, JsonTypeInfo.As.PROPERTY)
-  private val collection = mongo.getDatabase(gameName).getCollection("state").withWriteConcern(WriteConcern.JOURNALED)
+  private val collection = mongo.getDatabase(gameName).getCollection("state")
+    .withWriteConcern(writeConcern)
   private val filter = new BasicDBObject()
 
   private val upsert = new UpdateOptions().upsert(true)
