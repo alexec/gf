@@ -3,7 +3,7 @@ package gf.app.slots
 import gf.app.IntegrationTest
 import io.restassured.RestAssured
 import io.restassured.RestAssured.given
-import org.hamcrest.Matchers.equalTo
+import org.hamcrest.Matchers.{equalTo, notNullValue}
 import org.junit.{Before, Test}
 
 class ClassicSlotControllerIT extends IntegrationTest {
@@ -31,5 +31,18 @@ class ClassicSlotControllerIT extends IntegrationTest {
       .body("stops[2]", equalTo(0))
   }
 
+  @Test
+  def spin(): Unit = {
 
+    given()
+      .param("amount", "10")
+      .when()
+      .post("/spins")
+      .`then`()
+      .statusCode(201)
+      .body("stops[0]", notNullValue())
+      .body("stops[1]", notNullValue())
+      .body("stops[0]", notNullValue())
+      .body("balance", notNullValue())
+  }
 }
