@@ -53,7 +53,7 @@
                             <targetTests>
                                 <targetTests>gf.model.*</targetTests>
                             </targetTests>
-                            <coverageThreshold>90</coverageThreshold>
+                            <coverageThreshold>66</coverageThreshold>
                             <mutationThreshold>25</mutationThreshold>
                         </configuration>
                     </execution>
