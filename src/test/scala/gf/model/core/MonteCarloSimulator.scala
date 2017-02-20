@@ -25,7 +25,7 @@ class MonteCarloSimulator[G](
   private val wallet = new StatyWallet
 
   def main(args: Array[String]): Unit = {
-    val totalPlays = 10000000
+    val totalPlays = 1000000
     val start = System.currentTimeMillis()
     println(s"Total plays: ${format(totalPlays)}")
     var game = factory(wallet)

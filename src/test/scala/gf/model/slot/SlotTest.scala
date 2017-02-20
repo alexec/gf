@@ -22,7 +22,7 @@ class SlotTest {
 
   private val stops = List(6, 3, 1, 2, 4)
   private val wallet = SimpleWallet()
-  private val slot = Slot(_ => stops, wallet, reels, payTable, payLines)
+  private val slot = Slot(_ => stops, wallet, reels, payTable, payLines, 3, List(0, 0, 0, 0, 0))
     .spin(Money(1))
 
   @Test

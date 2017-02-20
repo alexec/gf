@@ -1,21 +1,27 @@
 package gf.model.slot
 
+import java.security.SecureRandom
+
 import gf.model.core.{Money, Wallet}
 
 
+object Slot {
+  val randomStops: Reels => Stops = _.map { reel => new SecureRandom().nextInt(reel.length) }
+}
 case class Slot(
-                 random: Reels => Stops,
+                 nextStops: Reels => Stops,
                  wallet: Wallet,
                  reels: Reels,
                  payTable: PayTable,
                  payLines: PayLines,
-                 stops: Stops = List(0, 0, 0, 0, 0)
+                 height: Int,
+                 stops: Stops
                ) {
 
   val window: Window = stops
     .zip(reels)
     .map {
-      case (stop, reel) => reel.slice(stop, stop + 3) ::: reel.take(3 - reel.length + stop)
+      case (stop, reel) => reel.slice(stop, stop + height) ::: reel.take(height - reel.length + stop)
     }
   val payouts: List[(PayLine, Int)] = payLines
     // extract the line
@@ -47,7 +53,7 @@ case class Slot(
 
     wallet.wager(amount)
 
-    val slot = copy(stops = random(reels))
+    val slot = copy(stops = nextStops(reels))
 
     slot.payouts.foreach { case (_, b) => wallet.payout(amount * b) }
 
