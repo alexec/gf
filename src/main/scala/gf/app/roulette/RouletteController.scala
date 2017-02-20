@@ -47,7 +47,7 @@ class RouletteController(repo: RouletteRepo, wallet: Wallet) {
   @ResponseStatus(HttpStatus.CREATED)
   def addBlackBet(@RequestParam("amount") amount: Money): Any = addBet(BlackBet(amount))
 
-  @PutMapping(Array("/spin"))
+  @PostMapping(Array("/spins"))
   def spin(): Any = {
     val roulette = repo.get(wallet).spin()
     repo.set(roulette)

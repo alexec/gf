@@ -114,7 +114,7 @@ class RouletteControllerIT extends IntegrationTest {
       .statusCode(201)
     given()
       .when()
-      .put("/spin")
+      .post("/spins")
       .`then`()
       .statusCode(200)
       .body("balance", notNullValue())
