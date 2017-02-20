@@ -1,16 +1,13 @@
 package gf.infra.roulette
 
-import java.security.SecureRandom
-
 import com.mongodb.{MongoClient, WriteConcern}
 import gf.infra.core.{GameFactory, GameRepo}
 import gf.model.core.Wallet
 import gf.model.roulette.Roulette
+import gf.model.roulette.Roulette.randomPocket
 
 
-private object RouletteGameFactory extends GameFactory[Roulette, State] {
-  private val randomPocket = Roulette.randomPocket(new SecureRandom())
-
+private object RouletteFactory extends GameFactory[Roulette, State] {
   override def toMaybeState(game: Roulette): Option[State] = {
     Some(State(game.pocket, game.bets))
   }
@@ -22,4 +19,4 @@ private object RouletteGameFactory extends GameFactory[Roulette, State] {
   }
 }
 
-class RouletteRepo(mongo: MongoClient, writeConcern: WriteConcern) extends GameRepo(mongo, "roulette", RouletteGameFactory, writeConcern)
+class RouletteRepo(mongo: MongoClient, writeConcern: WriteConcern) extends GameRepo(mongo, "roulette", RouletteFactory, writeConcern)

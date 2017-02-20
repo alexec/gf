@@ -6,8 +6,10 @@ import com.fasterxml.jackson.module.scala.experimental.ScalaObjectMapper
 import com.mongodb.{MongoClient, WriteConcern}
 import gf.app.core.ServiceController
 import gf.app.roulette.RouletteController
+import gf.app.slot.ClassicSlotController
 import gf.infra.core.DemoWallet
 import gf.infra.roulette.RouletteRepo
+import gf.infra.slot.classic.ClassicSlotRepo
 import gf.model.core.{Money, Wallet}
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.context.PropertyPlaceholderAutoConfiguration
@@ -53,6 +55,10 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 
   @Bean def rouletteController(mongo: MongoClient, wallet: Wallet, writeConcern: WriteConcern) =
     new RouletteController(new RouletteRepo(mongo, writeConcern), wallet)
+
+  @Bean def classicSlotController(mongo: MongoClient, wallet: Wallet, writeConcern: WriteConcern) =
+    new ClassicSlotController(new ClassicSlotRepo(mongo, writeConcern), wallet)
+
 }
 
 

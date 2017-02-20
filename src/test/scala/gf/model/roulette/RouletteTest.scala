@@ -4,20 +4,14 @@ import gf.model.core.{Money, SimpleWallet}
 import org.junit.Assert._
 import org.junit.Test
 
-import scala.util.Random
-
 class RouletteTest {
   private val wallet = SimpleWallet()
   private val wager = Money(10)
   //noinspection ForwardReference
-  private val random = () => winningPocket
-  private val roulette = Roulette(random = random, wallet = wallet)
+  private val nextPocket = () => winningPocket
+  private val roulette = Roulette(nextPocket = nextPocket, wallet = wallet)
   private var winningPocket = Pocket(1)
   private var losingPocket = Pocket(20)
-
-  @Test def randomPacket(): Unit = {
-    assertEquals(Pocket(6), Roulette.randomPocket(new Random(0))())
-  }
 
   @Test(expected = classOf[IllegalArgumentException]) def cannotBetOnZero(): Unit = {
     roulette.addBet(NumberBet(wager, Pocket(0)))
@@ -56,6 +50,8 @@ class RouletteTest {
       .spin().bets)
   }
 
+  private def winningBet() = NumberBet(wager, winningPocket)
+
   @Test def losingBetDoesNotPayout(): Unit = {
     roulette.addBet(losingBet())
       .spin()
@@ -69,8 +65,6 @@ class RouletteTest {
       .spin()
     assertEquals(Money(990 + 360), wallet.getBalance)
   }
-
-  private def winningBet() = NumberBet(wager, winningPocket)
 
   @Test def winningRedBetPaysEvens() = {
     roulette.addBet(RedBet(wager))

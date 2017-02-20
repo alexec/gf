@@ -1,18 +1,19 @@
 package gf.model.roulette
 
+import java.security.SecureRandom
+
 import gf.model.core.Wallet
 
 import scala.beans.BeanProperty
-import scala.util.Random
 
 
 
 
 object Roulette {
-  def randomPocket(random: Random): () => Pocket = () => Pocket(random.nextInt(37))
+  val randomPocket: () => Pocket = () => Pocket(new SecureRandom().nextInt(37))
 }
 
-case class Roulette(random: () => Pocket, wallet: Wallet, @BeanProperty pocket: Pocket = Pocket(0), @BeanProperty bets: List[Bet] = List()) {
+case class Roulette(nextPocket: () => Pocket, wallet: Wallet, @BeanProperty pocket: Pocket = Pocket(0), @BeanProperty bets: List[Bet] = List()) {
   def addBet(bet: Bet): Roulette = {
     wallet.wager(bet.amount)
     copy(bets = bet :: bets)
@@ -20,7 +21,7 @@ case class Roulette(random: () => Pocket, wallet: Wallet, @BeanProperty pocket: 
 
   def spin(): Roulette = {
     require(bets.nonEmpty, "no bets on table")
-    val roulette = copy(pocket = random(), bets = List())
+    val roulette = copy(pocket = nextPocket(), bets = List())
     bets.map {
       _.payout(roulette.pocket)
     }
