@@ -14,7 +14,7 @@ class RouletteControllerIT extends IntegrationTest {
     given()
       .param("balance", "1000")
       .when()
-      .put("/service/wallet")
+      .put("/service/wallets/0")
       .`then`()
       .statusCode(204)
 

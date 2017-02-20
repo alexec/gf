@@ -17,7 +17,7 @@ class ServiceControllerIT extends IntegrationTest {
   @Test def balances(): Unit = {
     given()
       .when()
-      .get("/wallet")
+      .get("/wallets/0")
       .`then`()
       .statusCode(200)
       .body("balance", notNullValue())

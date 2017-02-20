@@ -9,12 +9,12 @@ import org.springframework.web.bind.annotation._
 @RequestMapping(Array("/service"))
 class ServiceController(wallet: Wallet) {
 
-  @GetMapping(Array("/wallet"))
-  def getWallet: Any = Map("balance" -> wallet.getBalance)
+  @GetMapping(Array("/wallets/{walletId}"))
+  def getWallet(@PathVariable("walletId") walletId: WalletId): Any = Map("balance" -> wallet.getBalance)
 
-  @PutMapping(Array("/wallet"))
+  @PutMapping(Array("/wallets/{walletId}"))
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  def setBalance(@RequestParam balance: Money): Unit = {
+  def setBalance(@PathVariable("walletId") walletId: WalletId, @RequestParam balance: Money): Unit = {
     wallet.asInstanceOf[DemoWallet].setBalance(balance)
   }
 }

@@ -19,6 +19,7 @@ case class Roulette(random: () => Pocket, wallet: Wallet, @BeanProperty pocket: 
   }
 
   def spin(): Roulette = {
+    require(bets.nonEmpty, "no bets on table")
     val roulette = copy(pocket = random(), bets = List())
     bets.map {
       _.payout(roulette.pocket)

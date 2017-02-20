@@ -47,7 +47,9 @@ class RouletteTest {
       .spin().bets)
   }
 
-  private def winningBet() = NumberBet(wager, winningPocket)
+  @Test(expected = classOf[IllegalArgumentException]) def cannotSpinEmptyBets(): Unit = {
+    roulette.spin()
+  }
 
   @Test def spinEmptiesBet(): Unit = {
     assertEquals(List.empty, roulette.addBet(winningBet())
@@ -67,6 +69,8 @@ class RouletteTest {
       .spin()
     assertEquals(Money(990 + 360), wallet.getBalance)
   }
+
+  private def winningBet() = NumberBet(wager, winningPocket)
 
   @Test def winningRedBetPaysEvens() = {
     roulette.addBet(RedBet(wager))
