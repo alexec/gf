@@ -2,6 +2,7 @@ package gf.app
 
 import gf.Config
 import io.restassured.RestAssured
+import io.restassured.RestAssured.given
 import org.junit.Before
 import org.junit.runner.RunWith
 import org.springframework.boot.context.embedded.LocalServerPort
@@ -20,5 +21,13 @@ abstract class IntegrationTest {
     RestAssured.reset()
     RestAssured.port = port
     RestAssured.enableLoggingOfRequestAndResponseIfValidationFails()
+
+    given()
+      .param("balance", "1000")
+      .when()
+      .put("/service/wallets/0")
+      .`then`()
+      .statusCode(204)
+
   }
 }

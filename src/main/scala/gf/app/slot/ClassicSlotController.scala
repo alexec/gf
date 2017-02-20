@@ -14,8 +14,5 @@ class ClassicSlotController(repo: ClassicSlotRepo, wallet: Wallet) {
   def delete(): Unit = repo.delete()
 
   @GetMapping
-  def get(): Unit = {
-
-  }
-
+  def get(): Any = repo.get(wallet)
 }
