@@ -5,6 +5,7 @@ import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import com.fasterxml.jackson.module.scala.experimental.ScalaObjectMapper
 import com.mongodb.{MongoClient, WriteConcern}
 import gf.app.classicslot.ClassicSlotController
+import gf.app.core.ControllerExceptionHandler
 import gf.app.roulette.RouletteController
 import gf.infra.classicslot.ClassicSlotRepo
 import gf.infra.roulette.RouletteRepo
@@ -40,6 +41,7 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
       .registerModule(DefaultScalaModule)
       .configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false))
 
+  @Bean def exceptionHandler = new ControllerExceptionHandler
 
   @Bean def stringToMoney() = new Converter[String, Money] {
     override def convert(source: String): Money = Money(BigDecimal(source))

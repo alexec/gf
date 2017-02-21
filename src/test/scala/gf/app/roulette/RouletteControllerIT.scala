@@ -98,4 +98,13 @@ class RouletteControllerIT extends IntegrationTest {
       .body("balance", notNullValue())
       .body("pocket", notNullValue())
   }
+
+  @Test def badSpin(): Unit = {
+    given()
+      .when()
+      .post("/spins")
+      .`then`()
+      .statusCode(400)
+      .body("message", equalTo("requirement failed: no bets on table"))
+  }
 }
