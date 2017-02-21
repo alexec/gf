@@ -4,8 +4,8 @@ import java.security.SecureRandom
 
 import com.mongodb.{MongoClient, WriteConcern}
 import gf.infra.core.{GameFactory, GameRepo}
+import gf.model.classicslot.ClassicSlot
 import gf.model.core.Wallet
-import gf.model.slot.classic.ClassicSlot
 import gf.model.slot.{Reels, Slot, Stops}
 
 

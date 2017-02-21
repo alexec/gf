@@ -1,4 +1,4 @@
-package gf.model.slot.classic
+package gf.model.classicslot
 
 import gf.model.core.Wallet
 import gf.model.slot.{Reels, Slot, Stops}
