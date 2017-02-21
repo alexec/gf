@@ -11,37 +11,13 @@ class RouletteControllerIT extends IntegrationTest {
   @Before override def before(): Unit = {
     super.before()
 
-    RestAssured.basePath = "/games/roulette"
+    RestAssured.requestSpecification = spec.setBasePath("/games/roulette").build()
 
     given()
       .when()
       .delete()
       .`then`()
       .statusCode(204)
-  }
-
-  @Test def balance(): Unit = {
-    RestAssured.basePath = ""
-
-    given()
-      .get("/wallet")
-      .`then`()
-      .statusCode(200)
-      .body("balance", equalTo(1000))
-
-    given()
-      .param("amount", "10")
-      .param("number", "19")
-      .when()
-      .post("/games/roulette/bets/number")
-      .`then`()
-      .statusCode(201)
-
-    given()
-      .get("/wallet")
-      .`then`()
-      .statusCode(200)
-      .body("balance", equalTo(990))
   }
 
   //noinspection AccessorLikeMethodIsUnit

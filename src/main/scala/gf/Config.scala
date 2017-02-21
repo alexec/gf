@@ -5,12 +5,10 @@ import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import com.fasterxml.jackson.module.scala.experimental.ScalaObjectMapper
 import com.mongodb.{MongoClient, WriteConcern}
 import gf.app.classicslot.ClassicSlotController
-import gf.app.core.WalletController
 import gf.app.roulette.RouletteController
 import gf.infra.classicslot.ClassicSlotRepo
-import gf.infra.core.DemoWallet
 import gf.infra.roulette.RouletteRepo
-import gf.model.core.{Money, Wallet}
+import gf.model.core.Money
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.context.PropertyPlaceholderAutoConfiguration
 import org.springframework.boot.autoconfigure.jackson.JacksonAutoConfiguration
@@ -47,17 +45,13 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
     override def convert(source: String): Money = Money(BigDecimal(source))
   }
 
-  @Bean def wallet() = new DemoWallet()
-
-  @Bean def walletController(wallet: Wallet) = new WalletController(wallet)
-
   @Bean def writeConcern(@Value("${spring.data.mongodb.write-concern:JOURNALED}") value: String) = WriteConcern.valueOf(value)
 
-  @Bean def rouletteController(mongo: MongoClient, wallet: Wallet, writeConcern: WriteConcern) =
-    new RouletteController(new RouletteRepo(mongo, writeConcern), wallet)
+  @Bean def rouletteController(mongo: MongoClient, writeConcern: WriteConcern) =
+    new RouletteController(new RouletteRepo(mongo, writeConcern))
 
-  @Bean def classicSlotController(mongo: MongoClient, wallet: Wallet, writeConcern: WriteConcern) =
-    new ClassicSlotController(new ClassicSlotRepo(mongo, writeConcern), wallet)
+  @Bean def classicSlotController(mongo: MongoClient, writeConcern: WriteConcern) =
+    new ClassicSlotController(new ClassicSlotRepo(mongo, writeConcern))
 
 }
 

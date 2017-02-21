@@ -10,7 +10,7 @@ class ClassicSlotControllerIT extends IntegrationTest {
   @Before override def before(): Unit = {
     super.before()
 
-    RestAssured.basePath = "/games/classic-slot"
+    RestAssured.requestSpecification = spec.setBasePath("/games/classic-slot").build()
 
     given()
       .when()
