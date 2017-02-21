@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.{DeserializationFeature, ObjectMapper}
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import com.fasterxml.jackson.module.scala.experimental.ScalaObjectMapper
 import com.mongodb.{MongoClient, WriteConcern}
-import gf.app.core.ServiceController
+import gf.app.core.WalletController
 import gf.app.roulette.RouletteController
 import gf.app.slot.ClassicSlotController
 import gf.infra.core.DemoWallet
@@ -49,7 +49,7 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 
   @Bean def wallet() = new DemoWallet()
 
-  @Bean def serviceController(wallet: Wallet) = new ServiceController(wallet)
+  @Bean def walletController(wallet: Wallet) = new WalletController(wallet)
 
   @Bean def writeConcern(@Value("${spring.data.mongodb.write-concern:JOURNALED}") value: String) = WriteConcern.valueOf(value)
 

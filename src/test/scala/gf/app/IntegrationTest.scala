@@ -25,7 +25,7 @@ abstract class IntegrationTest {
     given()
       .param("balance", "1000")
       .when()
-      .put("/service/wallets/0")
+      .put("/wallet")
       .`then`()
       .statusCode(204)
 

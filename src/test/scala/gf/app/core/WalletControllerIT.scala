@@ -6,18 +6,18 @@ import io.restassured.RestAssured.given
 import org.hamcrest.Matchers.notNullValue
 import org.junit.{Before, Test}
 
-class ServiceControllerIT extends IntegrationTest {
+class WalletControllerIT extends IntegrationTest {
 
   @Before override def before(): Unit = {
     super.before()
 
-    RestAssured.basePath = "/service"
+    RestAssured.basePath = "/wallet"
   }
 
   @Test def balances(): Unit = {
     given()
       .when()
-      .get("/wallets/0")
+      .get()
       .`then`()
       .statusCode(200)
       .body("balance", notNullValue())
