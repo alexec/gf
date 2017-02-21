@@ -1,6 +1,5 @@
-package gf.model.classicslot.classic
+package gf.model.classicslot
 
-import gf.model.classicslot.ClassicSlot
 import gf.model.core.{Money, MonteCarloSimulator}
 import gf.model.slot.Slot
 
