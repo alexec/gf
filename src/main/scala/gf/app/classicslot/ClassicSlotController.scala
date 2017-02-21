@@ -1,12 +1,12 @@
-package gf.app.slot
+package gf.app.classicslot
 
-import gf.infra.slot.classic.ClassicSlotRepo
+import gf.infra.classicslot.ClassicSlotRepo
 import gf.model.core.{Money, Wallet}
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation._
 
 @RestController
-@RequestMapping(Array("/games/slots/classic"))
+@RequestMapping(Array("/games/classic-slot"))
 class ClassicSlotController(repo: ClassicSlotRepo, wallet: Wallet) {
 
   @DeleteMapping

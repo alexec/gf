@@ -4,12 +4,12 @@ import com.fasterxml.jackson.databind.{DeserializationFeature, ObjectMapper}
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import com.fasterxml.jackson.module.scala.experimental.ScalaObjectMapper
 import com.mongodb.{MongoClient, WriteConcern}
+import gf.app.classicslot.ClassicSlotController
 import gf.app.core.WalletController
 import gf.app.roulette.RouletteController
-import gf.app.slot.ClassicSlotController
+import gf.infra.classicslot.ClassicSlotRepo
 import gf.infra.core.DemoWallet
 import gf.infra.roulette.RouletteRepo
-import gf.infra.slot.classic.ClassicSlotRepo
 import gf.model.core.{Money, Wallet}
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.context.PropertyPlaceholderAutoConfiguration

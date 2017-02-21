@@ -1,4 +1,4 @@
-package gf.infra.slot.classic
+package gf.infra.classicslot
 
 import java.security.SecureRandom
 
@@ -23,4 +23,4 @@ private object ClassicSlotFactory extends GameFactory[Slot, State] {
   }
 }
 
-class ClassicSlotRepo(mongo: MongoClient, writeConcern: WriteConcern) extends GameRepo(mongo, "slot", ClassicSlotFactory, writeConcern)
+class ClassicSlotRepo(mongo: MongoClient, writeConcern: WriteConcern) extends GameRepo(mongo, "classic-slot", ClassicSlotFactory, writeConcern)

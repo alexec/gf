@@ -1,4 +1,4 @@
-package gf.infra.slot.classic
+package gf.infra.classicslot
 
 import gf.model.slot.Stops
 

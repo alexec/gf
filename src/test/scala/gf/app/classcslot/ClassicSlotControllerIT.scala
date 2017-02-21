@@ -1,4 +1,4 @@
-package gf.app.slots
+package gf.app.classcslot
 
 import gf.app.IntegrationTest
 import io.restassured.RestAssured
@@ -10,7 +10,7 @@ class ClassicSlotControllerIT extends IntegrationTest {
   @Before override def before(): Unit = {
     super.before()
 
-    RestAssured.basePath = "/games/slots/classic"
+    RestAssured.basePath = "/games/classic-slot"
 
     given()
       .when()
