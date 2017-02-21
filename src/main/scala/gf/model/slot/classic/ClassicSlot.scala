@@ -16,28 +16,24 @@ object ClassicSlot {
   private val Orange = 7
   private val Bar = 9
   private val reel = List(Melon, Bell, Seven, Bell, Lime, Cherry, Plum, Grapes, Orange, Bar)
-
-  def apply(random: (Reels => Stops), wallet: Wallet, stops: Stops = List(0, 0, 0)) = Slot(
-    random,
-    wallet,
-    List(
-      new Random().shuffle(reel),
-      new Random().shuffle(reel),
-      new Random().shuffle(reel)
-    ),
-    Map(
-      (Melon, 3) -> 5,
-      (Bell, 3) -> 20,
-      (Seven, 3) -> 5,
-      (Lime, 3) -> 5,
-      (Cherry, 3) -> 15,
-      (Plum, 3) -> 5,
-      (Grapes, 3) -> 5,
-      (Orange, 3) -> 5,
-      (Bar, 3) -> 20
-    ),
-    List(List(0, 0, 0)),
-    3,
-    stops
+  private val reels = List(
+    new Random(0).shuffle(reel),
+    new Random(1).shuffle(reel),
+    new Random(2).shuffle(reel)
   )
+  private val payTable = Map(
+    (Melon, 3) -> 5,
+    (Bell, 3) -> 20,
+    (Seven, 3) -> 5,
+    (Lime, 3) -> 5,
+    (Cherry, 3) -> 15,
+    (Plum, 3) -> 5,
+    (Grapes, 3) -> 5,
+    (Orange, 3) -> 5,
+    (Bar, 3) -> 20
+  )
+  private val payLines = List(List(0, 0, 0))
+
+  def apply(random: (Reels => Stops), wallet: Wallet, stops: Stops = List(0, 0, 0)) =
+    Slot(random, wallet, reels, payTable, payLines, 1, stops)
 }
