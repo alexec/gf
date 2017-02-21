@@ -20,13 +20,13 @@ class HttpWallet(url: URI) extends Wallet {
 
   override def wager(amount: Money): Unit = createTransaction(amount)
 
-  override def payout(amount: Money): Unit = createTransaction(-amount)
-
   private def createTransaction(amount: Money) = {
     val transaction = new TransactionDao()
     transaction.amount = amount
-    rest.postForObject(url + "/transactions", transaction, classOf[Wallet])
+    rest.postForObject(url + "/transactions", transaction, classOf[WalletDao])
   }
+
+  override def payout(amount: Money): Unit = createTransaction(-amount)
 
   override def getBalance: Money = rest.getForObject(url, classOf[WalletDao]).balance
 }
