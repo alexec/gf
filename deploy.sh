@@ -2,10 +2,12 @@
 set -eux
 
 H=root@games.alexecollins.com
+D=/var/helios-games
+U=gf
 
-ssh $H "[ -e /var/gf ] || mkdir /var/gf"
-ssh $H "adduser --system gf || true"
+ssh $H "[ -e $D ] || mkdir $D"
+ssh $H "adduser --system $U || true"
 
-rsync -avz --progress target/gf-1.0.0-SNAPSHOT.jar $H:/var/gf/gf.jar
+rsync -avz --progress target/$U-1.0.0-SNAPSHOT.jar $H:/var/helios-games/$U.jar
 
-ssh $H "chmod +x /var/gf/gf.jar && ln -sf /var/gf/gf.jar /etc/init.d/gf && chown gf /etc/init.d/gf && /etc/init.d/gf restart"
+ssh $H "echo > $D/$U.conf && chmod +x $D/$U.jar && ln -sf $D/$U.jar /etc/init.d/$U && chown $U /etc/init.d/$U && /etc/init.d/$U restart"
