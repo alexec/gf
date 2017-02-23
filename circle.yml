@@ -15,9 +15,9 @@ deployment:
     branch: master
     commands:
       - mvn package spring-boot:repackage
-      - docker build --rm=false -t alexec/gf:1.0.0 .
+      - docker build --rm=false -t alexec/gf:$CIRCLE_BUILD_NUM -t alexec/gf:latest .
       - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
-      - docker push alexec/gf:1.0.0
+      - docker push alexec/gf
   prod:
     branch: master
     commands:

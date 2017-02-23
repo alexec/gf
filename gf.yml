@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
       - name: gf
-        image: alexec/gf:1.0.0
+        image: alexec/gf:latest
         env:
           - name: JAVA_OPTS
             value: -Xmx64m
