@@ -15,7 +15,7 @@ general:
     - target/pit-reports
 deployment:
   hub:
-    branch: docker
+    branch: .*
     commands:
       - mvn package spring-boot:repackage
       - docker build --rm=false -t alexec/gf:1.0.0 .
