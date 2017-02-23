@@ -33,7 +33,7 @@ abstract class IntegrationTest {
     wireMockServer.start()
     WireMock.configureFor(9090)
 
-    stubFor(get(urlEqualTo(""))
+    stubFor(get(urlEqualTo("/"))
       .withHeader("Accept", containing("application/json"))
       .willReturn(aResponse()
         .withStatus(200)
