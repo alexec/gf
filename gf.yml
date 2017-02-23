@@ -1,0 +1,44 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gf
+  labels:
+    app: gf
+spec:
+  ports:
+  - port: 8080
+    name: gf
+  selector:
+    app: gf
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: gf-deployment
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: gf
+    spec:
+      containers:
+      - name: gf
+        image: alexec/gf:1.0.0
+        env:
+          - name: JAVA_OPTS
+            value: -Xmx64m
+          - name: SPRING_DATA_MONGODB_HOST
+            value: statedb
+        ports:
+        - containerPort: 8080
+        livenessProbe:
+          httpGet:
+            path: /games/roulette
+            port: 8080
+            httpHeaders:
+            - name: Wallet
+              value: http://wallet:80800
+          initialDelaySeconds: 15
+          periodSeconds: 3
