@@ -33,7 +33,7 @@ abstract class IntegrationTest {
     wireMockServer.start()
     WireMock.configureFor(9090)
 
-    stubFor(get(urlEqualTo("/"))
+    stubFor(get(urlEqualTo(""))
       .withHeader("Accept", containing("application/json"))
       .willReturn(aResponse()
         .withStatus(200)
@@ -41,7 +41,6 @@ abstract class IntegrationTest {
         .withBody("{\"balance\": 1000}")))
 
     stubFor(post(urlEqualTo("/transactions"))
-      .withRequestBody(containing("amount"))
       .willReturn(aResponse()
         .withStatus(204)
         .withHeader("Content-Type", "application/json")))
