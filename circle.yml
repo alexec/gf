@@ -2,6 +2,8 @@ machine:
   java:
     version: openjdk8
 test:
+  pre:
+    - createdb wallet
   override:
     - mvn verify -Dspring.data.mongodb.write-concern=ACKNOWLEDGED
   post:
@@ -12,6 +14,13 @@ general:
   artifacts:
     - target/pit-reports
 deployment:
+  hub:
+    branch: docker
+    commands:
+      - mvn package spring-boot:repackage
+      - docker build --rm=false -t alexec/wallet:1.0.0 .
+      - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
+      - docker push alexec/wallet:1.0.0
   prod:
     branch: master
     commands:
