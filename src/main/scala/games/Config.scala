@@ -49,11 +49,13 @@ import roulette.infra.RouletteRepo
 
   @Bean def writeConcern(@Value("${spring.data.mongodb.write-concern:JOURNALED}") value: String) = WriteConcern.valueOf(value)
 
-  @Bean def rouletteController(mongo: MongoClient, writeConcern: WriteConcern) =
-    new RouletteController(new RouletteRepo(mongo, writeConcern))
+  @Bean def rouletteRepo(mongo: MongoClient, writeConcern: WriteConcern) = new RouletteRepo(mongo, writeConcern)
 
-  @Bean def classicSlotController(mongo: MongoClient, writeConcern: WriteConcern) =
-    new ClassicSlotController(new ClassicSlotRepo(mongo, writeConcern))
+  @Bean def rouletteController(repo: RouletteRepo) = new RouletteController(repo)
+
+  @Bean def classicSlotRepo(mongo: MongoClient, writeConcern: WriteConcern) = new ClassicSlotRepo(mongo, writeConcern)
+
+  @Bean def classicSlotController(repo: ClassicSlotRepo) = new ClassicSlotController(repo)
 
 }
 

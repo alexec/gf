@@ -12,10 +12,6 @@ import org.springframework.web.bind.annotation._
 @RequestMapping(Array("/games/classic-slot"))
 class ClassicSlotController(repo: ClassicSlotRepo) {
 
-  @DeleteMapping
-  @ResponseStatus(HttpStatus.NO_CONTENT)
-  def delete(@RequestHeader("PlayerId") playerId: String): Unit = repo.delete(playerId)
-
   @GetMapping
   def get(@RequestHeader("PlayerId") playerId: String, @RequestHeader("Wallet") uri: URI): Any = repo.get(playerId, new HttpWallet(uri))
 

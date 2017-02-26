@@ -13,11 +13,6 @@ import roulette.model._
 @RequestMapping(Array("/games/roulette"))
 class RouletteController(repo: RouletteRepo) {
 
-  @DeleteMapping
-  @ResponseStatus(HttpStatus.NO_CONTENT)
-  def delete(@RequestHeader("PlayerId") playerId: String): Unit = repo.delete(playerId)
-
-
   @GetMapping
   def get(@RequestHeader("PlayerId") playerId: String, @RequestHeader("Wallet") uri: URI): Any = {
     val roulette = repo.get(playerId, new HttpWallet(uri))

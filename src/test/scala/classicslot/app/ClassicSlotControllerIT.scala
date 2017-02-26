@@ -5,7 +5,9 @@ import io.restassured.RestAssured
 import io.restassured.RestAssured.given
 import org.hamcrest.Matchers.{equalTo, notNullValue}
 import org.junit.{Before, Test}
+import org.springframework.test.context.ContextConfiguration
 
+@ContextConfiguration(classes = Array(classOf[ClassicSlotTestConfig]))
 class ClassicSlotControllerIT extends IntegrationTest {
   @Before override def before(): Unit = {
     super.before()

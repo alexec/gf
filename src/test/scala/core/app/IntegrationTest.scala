@@ -3,7 +3,6 @@ package core.app
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.client.WireMock._
-import games.Config
 import io.restassured.RestAssured
 import io.restassured.builder.RequestSpecBuilder
 import org.junit.runner.RunWith
@@ -15,7 +14,7 @@ import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit4.SpringRunner
 
 @RunWith(classOf[SpringRunner])
-@ContextConfiguration(classes = Array(classOf[Config]))
+@ContextConfiguration(classes = Array(classOf[TestConfig]))
 @SpringBootTest(webEnvironment = RANDOM_PORT)
 abstract class IntegrationTest {
   private val wireMockServer = new WireMockServer(9090)
