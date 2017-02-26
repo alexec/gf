@@ -27,8 +27,8 @@ spec:
       - name: gf
         image: alexec/gf:latest
         env:
-          - name: JAVA_OPTS
-            value: -Xmx64m
+          #- name: JAVA_OPTS
+          #  value: -Xmx64m
           - name: SPRING_DATA_MONGODB_HOST
             value: statedb
         ports:
@@ -39,9 +39,9 @@ spec:
             port: 8080
             httpHeaders:
             - name: PlayerId
-              value: 0 
-          initialDelaySeconds: 90
+              value: "0" 
             - name: Wallet
               value: http://wallet:8080
-          initialDelaySeconds: 15
+          initialDelaySeconds: 180
           periodSeconds: 3
+          timeoutSeconds: 10
