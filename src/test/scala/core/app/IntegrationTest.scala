@@ -28,6 +28,7 @@ abstract class IntegrationTest {
 
     spec = new RequestSpecBuilder()
       .setPort(port)
+      .addHeader("PlayerId", "0")
       .addHeader("Wallet", "http://localhost:9090")
 
     wireMockServer.start()

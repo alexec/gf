@@ -14,17 +14,17 @@ class ClassicSlotController(repo: ClassicSlotRepo) {
 
   @DeleteMapping
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  def delete(): Unit = repo.delete()
+  def delete(@RequestHeader("PlayerId") playerId: String): Unit = repo.delete(playerId)
 
   @GetMapping
-  def get(@RequestHeader("Wallet") uri: URI): Any = repo.get(new HttpWallet(uri))
+  def get(@RequestHeader("PlayerId") playerId: String, @RequestHeader("Wallet") uri: URI): Any = repo.get(playerId, new HttpWallet(uri))
 
 
   @PostMapping(Array("/spins"))
   @ResponseStatus(HttpStatus.CREATED)
-  def spin(@RequestHeader("Wallet") uri: URI, @RequestParam("amount") amount: Money): Any = {
+  def spin(@RequestHeader("PlayerId") playerId: String, @RequestHeader("Wallet") uri: URI, @RequestParam("amount") amount: Money): Any = {
     val wallet = new HttpWallet(uri)
-    val slot = repo.get(wallet).spin(amount)
+    val slot = repo.get(playerId, wallet).spin(amount)
     Map(
       "stops" -> slot.stops,
       "balance" -> wallet.getBalance

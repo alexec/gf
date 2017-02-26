@@ -15,12 +15,12 @@ class RouletteController(repo: RouletteRepo) {
 
   @DeleteMapping
   @ResponseStatus(HttpStatus.NO_CONTENT)
-  def delete(): Unit = repo.delete()
+  def delete(@RequestHeader("PlayerId") playerId: String): Unit = repo.delete(playerId)
 
 
   @GetMapping
-  def get(@RequestHeader("Wallet") uri: URI): Any = {
-    val roulette = repo.get(new HttpWallet(uri))
+  def get(@RequestHeader("PlayerId") playerId: String, @RequestHeader("Wallet") uri: URI): Any = {
+    val roulette = repo.get(playerId, new HttpWallet(uri))
     Map(
       "pocket" -> roulette.pocket.number,
       "bets" -> roulette.bets.map {
@@ -34,30 +34,30 @@ class RouletteController(repo: RouletteRepo) {
 
   @PostMapping(Array("/bets/number"))
   @ResponseStatus(HttpStatus.CREATED)
-  def addNumbersBet(@RequestHeader("Wallet") uri: URI, @RequestParam("amount") amount: Money, @RequestParam("number") number: Int): Any =
-    addBet(uri, NumberBet(amount, Pocket(number)))
+  def addNumbersBet(@RequestHeader("PlayerId") playerId: String, @RequestHeader("Wallet") uri: URI, @RequestParam("amount") amount: Money, @RequestParam("number") number: Int): Any =
+    addBet(playerId, uri, NumberBet(amount, Pocket(number)))
 
-  @PostMapping(Array("/bets/red"))
-  @ResponseStatus(HttpStatus.CREATED)
-  def addRedBet(@RequestHeader("Wallet") uri: URI, @RequestParam("amount") amount: Money): Any =
-    addBet(uri, RedBet(amount))
-
-  @PostMapping(Array("/bets/black"))
-  @ResponseStatus(HttpStatus.CREATED)
-  def addBlackBet(@RequestHeader("Wallet") uri: URI, @RequestParam("amount") amount: Money): Any =
-    addBet(uri, BlackBet(amount))
-
-  private def addBet(uri: URI, bet: Bet) = {
+  private def addBet(playerId: String, uri: URI, bet: Bet) = {
     val wallet = new HttpWallet(uri)
-    repo.set(repo.get(wallet).addBet(bet))
+    repo.set(playerId, repo.get(playerId, wallet).addBet(bet))
     Map("balance" -> wallet.getBalance)
   }
 
+  @PostMapping(Array("/bets/red"))
+  @ResponseStatus(HttpStatus.CREATED)
+  def addRedBet(@RequestHeader("PlayerId") playerId: String, @RequestHeader("Wallet") uri: URI, @RequestParam("amount") amount: Money): Any =
+    addBet(playerId, uri, RedBet(amount))
+
+  @PostMapping(Array("/bets/black"))
+  @ResponseStatus(HttpStatus.CREATED)
+  def addBlackBet(@RequestHeader("PlayerId") playerId: String, @RequestHeader("Wallet") uri: URI, @RequestParam("amount") amount: Money): Any =
+    addBet(playerId, uri, BlackBet(amount))
+
   @PostMapping(Array("/spins"))
-  def spin(@RequestHeader("Wallet") uri: URI): Any = {
+  def spin(@RequestHeader("PlayerId") playerId: String, @RequestHeader("Wallet") uri: URI): Any = {
     val wallet = new HttpWallet(uri)
-    val roulette = repo.get(wallet).spin()
-    repo.set(roulette)
+    val roulette = repo.get(playerId, wallet).spin()
+    repo.set(playerId, roulette)
     Map(
       "balance" -> wallet.getBalance,
       "pocket" -> roulette.pocket.number

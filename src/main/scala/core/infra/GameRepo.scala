@@ -5,11 +5,12 @@ import com.fasterxml.jackson.databind.ObjectMapper.DefaultTyping
 import com.fasterxml.jackson.databind.{DeserializationFeature, ObjectMapper}
 import com.fasterxml.jackson.module.scala.DefaultScalaModule
 import com.fasterxml.jackson.module.scala.experimental.ScalaObjectMapper
-import com.mongodb.client.model.UpdateOptions
+import com.mongodb.client.model.{Filters, UpdateOptions}
 import com.mongodb.util.JSON
-import com.mongodb.{BasicDBObject, MongoClient, WriteConcern}
+import com.mongodb.{MongoClient, WriteConcern}
 import core.model.Wallet
 import org.bson.Document
+import org.bson.conversions.Bson
 import org.springframework.stereotype.Repository
 
 
@@ -22,24 +23,24 @@ class GameRepo[G, S](mongo: MongoClient, gameName: String, factory: GameFactory[
     .enableDefaultTyping(DefaultTyping.OBJECT_AND_NON_CONCRETE, JsonTypeInfo.As.PROPERTY)
   private val collection = mongo.getDatabase(gameName).getCollection("state")
     .withWriteConcern(writeConcern)
-  private val filter = new BasicDBObject()
+  private val filter: (String => Bson) = id => Filters.eq("_id", id)
 
   private val upsert = new UpdateOptions().upsert(true)
 
-  def set(game: G): Unit = {
+  def set(id: String, game: G): Unit = {
     val state = factory.toMaybeState(game)
     if (state.isDefined) {
-      collection.replaceOne(filter, Document.parse(mapper.writeValueAsString(state.get)), upsert)
+      collection.replaceOne(filter(id), Document.parse(mapper.writeValueAsString(state.get)).append("_id", id), upsert)
     } else {
-      delete()
+      delete(id)
     }
   }
 
-  def delete(): Unit = collection.deleteOne(filter)
+  def delete(id: String): Unit = collection.deleteOne(filter(id))
 
-  def get(wallet: Wallet)(implicit ev: Manifest[S]): G = {
+  def get(id: String, wallet: Wallet)(implicit ev: Manifest[S]): G = {
 
-    val cursor = collection.find(filter).iterator()
+    val cursor = collection.find(filter(id)).iterator()
 
     if (cursor.hasNext) {
       factory.toGame(wallet, Some(mapper.readValue(JSON.serialize(cursor.next()), ev.runtimeClass).asInstanceOf[S]))
