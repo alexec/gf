@@ -40,7 +40,7 @@ spec:
             httpHeaders:
             - name: PlayerId
               value: 0 
-          initialDelaySeconds: 15
+          initialDelaySeconds: 90
             - name: Wallet
               value: http://wallet:8080
           initialDelaySeconds: 15
