@@ -1,1 +1,0 @@
-[![Build Status](https://travis-ci.org/helios-games/gf.svg?branch=master)](https://travis-ci.org/helios-games/gf)
