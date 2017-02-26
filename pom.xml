@@ -56,13 +56,13 @@
                         <configuration>
                             <skip>${skipTests}</skip>
                             <targetClasses>
-                                <targetClass>gf.model.*</targetClass>
+                                <targetClass>*.model.*</targetClass>
                             </targetClasses>
                             <targetTests>
-                                <targetTests>gf.model.*</targetTests>
+                                <targetTests>*.model.*</targetTests>
                             </targetTests>
-                            <coverageThreshold>63</coverageThreshold>
-                            <mutationThreshold>25</mutationThreshold>
+                            <coverageThreshold>89</coverageThreshold>
+                            <mutationThreshold>27</mutationThreshold>
                         </configuration>
                     </execution>
                 </executions>
