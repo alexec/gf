@@ -18,6 +18,6 @@ deployment:
       - docker build --rm=false -t alexec/gf:$CIRCLE_BUILD_NUM -t alexec/gf:latest .
       - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
       - docker push alexec/gf
-      - mvn package -Pexecutable
+      - mvn clean package -Pexecutable
       - ./deploy.sh
       - "curl -u $CIRCLE_TOKEN: -X POST https://circleci.com/api/v1.1/proj/github/phoebus-games/smoke/tree/master"
