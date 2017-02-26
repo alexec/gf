@@ -31,6 +31,16 @@ class HttpWalletTest {
     assertEquals(Money(1000), wallet.getBalance)
   }
 
+  @Test(expected = classOf[NotEnoughFundsException])
+  def notEnoughFunds(): Unit = {
+    stubFor(post(urlEqualTo("/transactions"))
+      .willReturn(aResponse()
+        .withStatus(403)
+        .withHeader("Content-Type", "application/json")
+        .withBody("{\"message\": \"not enough funds\"}")))
+    wallet.wager(Money(1))
+  }
+
   @Test
   def wagerSendNegativeAmount(): Unit = {
     stubFor(post(urlEqualTo("/transactions"))

@@ -3,7 +3,7 @@ package core.infra
 import java.net.URI
 
 import core.model.{Money, Wallet}
-import org.springframework.web.client.RestTemplate
+import org.springframework.web.client.{HttpClientErrorException, RestTemplate}
 
 import scala.beans.BeanProperty
 
@@ -25,7 +25,11 @@ class HttpWallet(url: URI) extends Wallet {
   private def createTransaction(amount: Money) = {
     val transaction = new TransactionDao()
     transaction.amount = amount
-    rest.postForObject(url + "/transactions", transaction, classOf[WalletDao])
+    try {
+      rest.postForObject(url + "/transactions", transaction, classOf[WalletDao])
+    } catch {
+      case _: HttpClientErrorException => throw new NotEnoughFundsException();
+    }
   }
 
   override def getBalance: Money = rest.getForObject(url, classOf[WalletDao]).balance
