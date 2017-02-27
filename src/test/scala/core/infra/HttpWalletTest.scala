@@ -8,22 +8,51 @@ import com.github.tomakehurst.wiremock.client.WireMock._
 import core.model.Money
 import org.junit.Assert.assertEquals
 import org.junit.{After, Before, Test}
+import org.springframework.web.client.RestClientException
 
 class HttpWalletTest {
   private val wireMockServer = new WireMockServer(9090)
-  private val wallet = new HttpWallet(URI.create("http://localhost:9090"))
+  private val uri = URI.create("http://localhost:9090")
+  private val wallet = new HttpWallet(uri, "username", "password")
+  private val unauthorizedWallet = new HttpWallet(uri, "xxx", "xxx")
 
   @Before def before(): Unit = {
     wireMockServer.start()
     WireMock.configureFor(9090)
   }
 
-  @After def tearDown(): Unit = wireMockServer.stop()
+  @After def tearDown(): Unit = {
+    WireMock.reset()
+    wireMockServer.stop()
+  }
+
+
+  @Test(expected = classOf[RestClientException])
+  def notAuthorizedGetBalance(): Unit = {
+    stubFor(get(anyUrl())
+      .willReturn(aResponse().withStatus(403)))
+    unauthorizedWallet.getBalance
+  }
+
+  @Test(expected = classOf[RestClientException])
+  def notAuthorizedWager(): Unit = {
+    stubFor(post(anyUrl())
+      .willReturn(aResponse().withStatus(403)))
+    unauthorizedWallet.wager(Money(1))
+  }
+
+  @Test(expected = classOf[RestClientException])
+  def notAuthorizedPayout(): Unit = {
+    stubFor(post(anyUrl())
+      .willReturn(aResponse().withStatus(403)))
+    unauthorizedWallet.payout(Money(1))
+  }
 
   @Test
   def balance(): Unit = {
     stubFor(get(urlEqualTo("/"))
       .withHeader("Accept", containing("application/json"))
+      .withBasicAuth("username", "password")
       .willReturn(aResponse()
         .withStatus(200)
         .withHeader("Content-Type", "application/json")
@@ -44,6 +73,7 @@ class HttpWalletTest {
   @Test
   def wagerSendNegativeAmount(): Unit = {
     stubFor(post(urlEqualTo("/transactions"))
+      .withBasicAuth("username", "password")
       .withRequestBody(containing("\"amount\":-1"))
       .willReturn(aResponse()
         .withStatus(204)
@@ -54,6 +84,7 @@ class HttpWalletTest {
   @Test
   def payoutSendsPositiveAmount(): Unit = {
     stubFor(post(urlEqualTo("/transactions"))
+      .withBasicAuth("username", "password")
       .withRequestBody(containing("\"amount\":1"))
       .willReturn(aResponse()
         .withStatus(204)

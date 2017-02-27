@@ -3,7 +3,8 @@ package core.infra
 import java.net.URI
 
 import core.model.{Money, Wallet}
-import org.springframework.web.client.{HttpClientErrorException, RestTemplate}
+import org.springframework.boot.web.client.RestTemplateBuilder
+import org.springframework.web.client.HttpClientErrorException
 
 import scala.beans.BeanProperty
 
@@ -15,8 +16,8 @@ class WalletDao {
   @BeanProperty var balance: Money = _
 }
 
-class HttpWallet(url: URI) extends Wallet {
-  private val rest = new RestTemplate()
+class HttpWallet(url: URI, username: String, password: String) extends Wallet {
+  private val rest = new RestTemplateBuilder().basicAuthorization(username, password).build()
 
   override def wager(amount: Money): Unit = createTransaction(-amount)
 
@@ -28,7 +29,8 @@ class HttpWallet(url: URI) extends Wallet {
     try {
       rest.postForObject(url + "/transactions", transaction, classOf[WalletDao])
     } catch {
-      case _: HttpClientErrorException => throw new NotEnoughFundsException();
+      case e: HttpClientErrorException =>
+        if (e.getResponseBodyAsString.contains("not enough funds")) throw new NotEnoughFundsException() else throw e
     }
   }
 
