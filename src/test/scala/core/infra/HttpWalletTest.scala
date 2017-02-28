@@ -8,7 +8,6 @@ import com.github.tomakehurst.wiremock.client.WireMock._
 import core.model.Money
 import org.junit.Assert.assertEquals
 import org.junit.{After, Before, Test}
-import org.springframework.web.client.RestClientException
 
 class HttpWalletTest {
   private val wireMockServer = new WireMockServer(9090)
@@ -27,21 +26,21 @@ class HttpWalletTest {
   }
 
 
-  @Test(expected = classOf[RestClientException])
+  @Test(expected = classOf[Exception])
   def notAuthorizedGetBalance(): Unit = {
     stubFor(get(anyUrl())
       .willReturn(aResponse().withStatus(403)))
     unauthorizedWallet.getBalance
   }
 
-  @Test(expected = classOf[RestClientException])
+  @Test(expected = classOf[Exception])
   def notAuthorizedWager(): Unit = {
     stubFor(post(anyUrl())
       .willReturn(aResponse().withStatus(403)))
     unauthorizedWallet.wager(Money(1))
   }
 
-  @Test(expected = classOf[RestClientException])
+  @Test(expected = classOf[Exception])
   def notAuthorizedPayout(): Unit = {
     stubFor(post(anyUrl())
       .willReturn(aResponse().withStatus(403)))

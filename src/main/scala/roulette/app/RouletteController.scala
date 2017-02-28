@@ -1,22 +1,33 @@
 package roulette.app
 
 import java.net.URI
+import javax.inject.Inject
+import javax.ws.rs._
+import javax.ws.rs.core.Response
 
-import core.infra.HttpWallet
-import core.model.Money
-import org.springframework.http.HttpStatus
-import org.springframework.web.bind.annotation._
+import _root_.core.infra.HttpWallet
+import _root_.core.model.Money
 import roulette.infra.RouletteRepo
 import roulette.model._
 
-@RestController
-@RequestMapping(Array("/games/roulette"))
-class RouletteController(repo: RouletteRepo) {
+import scala.beans.BeanProperty
 
-  @GetMapping
-  def get(@RequestHeader("PlayerId") playerId: String, @RequestHeader("Wallet") uri: URI): Any = {
+case class NumberBetRequest(@BeanProperty amount:Money, @BeanProperty number:Int)
+case class BetRequest(@BeanProperty amount:Money)
+
+@Path("/games/roulette")
+class RouletteController @Inject() (repo: RouletteRepo) {
+
+  @DELETE
+  def delete(@HeaderParam("PlayerId") playerId: String): Response = {
+    repo.delete(playerId)
+    Response.noContent().build
+  }
+
+  @GET
+  def get(@HeaderParam("PlayerId") playerId: String, @HeaderParam("Wallet") uri: URI): Response = {
     val roulette = repo.get(playerId, getWallet(uri))
-    Map(
+    Response.ok(Map(
       "pocket" -> roulette.pocket.number,
       "bets" -> roulette.bets.map {
         case NumberBet(amount, pocket) => Map("type" -> "number", "number" -> pocket.number, "amount" -> amount)
@@ -24,40 +35,41 @@ class RouletteController(repo: RouletteRepo) {
         case BlackBet(amount) => Map("type" -> "black", "amount" -> amount)
         case _ => throw new AssertionError()
       }
-    )
+    )).build()
   }
 
   private def getWallet(uri: URI) = new HttpWallet(uri, "roulette", "roulette")
 
-  @PostMapping(Array("/bets/number"))
-  @ResponseStatus(HttpStatus.CREATED)
-  def addNumbersBet(@RequestHeader("PlayerId") playerId: String, @RequestHeader("Wallet") uri: URI, @RequestParam("amount") amount: Money, @RequestParam("number") number: Int): Any =
-    addBet(playerId, uri, NumberBet(amount, Pocket(number)))
+  @POST
+  @Path("/bets/number")
+  def addNumbersBet(@HeaderParam("PlayerId") playerId: String, @HeaderParam("Wallet") uri: URI, numberBet: NumberBetRequest): Response =
+    addBet(playerId, uri, NumberBet(numberBet.amount, Pocket(numberBet.number)))
 
   private def addBet(playerId: String, uri: URI, bet: Bet) = {
     val wallet = getWallet(uri)
     repo.set(playerId, repo.get(playerId, wallet).addBet(bet))
-    Map("balance" -> wallet.getBalance)
+    Response.created(URI.create(".")).entity(Map("balance" -> wallet.getBalance)).build()
   }
 
-  @PostMapping(Array("/bets/red"))
-  @ResponseStatus(HttpStatus.CREATED)
-  def addRedBet(@RequestHeader("PlayerId") playerId: String, @RequestHeader("Wallet") uri: URI, @RequestParam("amount") amount: Money): Any =
-    addBet(playerId, uri, RedBet(amount))
+  @POST
+  @Path("/bets/red")
+  def addRedBet(@HeaderParam("PlayerId") playerId: String, @HeaderParam("Wallet") uri: URI, bet: BetRequest): Response =
+    addBet(playerId, uri, RedBet(bet.amount))
 
-  @PostMapping(Array("/bets/black"))
-  @ResponseStatus(HttpStatus.CREATED)
-  def addBlackBet(@RequestHeader("PlayerId") playerId: String, @RequestHeader("Wallet") uri: URI, @RequestParam("amount") amount: Money): Any =
-    addBet(playerId, uri, BlackBet(amount))
+  @POST
+  @Path("/bets/black")
+  def addBlackBet(@HeaderParam("PlayerId") playerId: String, @HeaderParam("Wallet") uri: URI, bet: BetRequest): Response =
+    addBet(playerId, uri, BlackBet(bet.amount))
 
-  @PostMapping(Array("/spins"))
-  def spin(@RequestHeader("PlayerId") playerId: String, @RequestHeader("Wallet") uri: URI): Any = {
+  @POST
+  @Path("/spins")
+  def spin(@HeaderParam("PlayerId") playerId: String, @HeaderParam("Wallet") uri: URI): Response = {
     val wallet = getWallet(uri)
     val roulette = repo.get(playerId, wallet).spin()
     repo.set(playerId, roulette)
-    Map(
+    Response.created(URI.create(".")).entity(Map(
       "balance" -> wallet.getBalance,
       "pocket" -> roulette.pocket.number
-    )
+    )).build()
   }
 }

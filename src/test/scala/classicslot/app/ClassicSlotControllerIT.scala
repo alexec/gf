@@ -3,16 +3,19 @@ package classicslot.app
 import core.app.IntegrationTest
 import io.restassured.RestAssured
 import io.restassured.RestAssured.given
+import io.restassured.http.ContentType
 import org.hamcrest.Matchers.{equalTo, notNullValue}
 import org.junit.{Before, Test}
-import org.springframework.test.context.ContextConfiguration
 
-@ContextConfiguration(classes = Array(classOf[ClassicSlotTestConfig]))
-class ClassicSlotControllerIT extends IntegrationTest {
+class ClassicSlotControllerIT extends IntegrationTest(new ClassicSlotTestConfig) {
   @Before override def before(): Unit = {
     super.before()
 
-    RestAssured.requestSpecification = spec.setBasePath("/games/classic-slot").build()
+    RestAssured.requestSpecification = spec
+      .setBasePath("/games/classic-slot")
+      .setContentType(ContentType.JSON)
+      .setAccept(ContentType.JSON)
+      .build()
 
     given()
       .when()
@@ -37,7 +40,7 @@ class ClassicSlotControllerIT extends IntegrationTest {
   def spin(): Unit = {
 
     given()
-      .param("amount", "10")
+      .body("{\"amount\": 10}")
       .when()
       .post("/spins")
       .`then`()

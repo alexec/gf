@@ -1,10 +1,13 @@
 package core.infra
 
 import java.net.URI
+import javax.ws.rs.ForbiddenException
+import javax.ws.rs.client.{ClientBuilder, Entity}
+import javax.ws.rs.core.MediaType
 
 import core.model.{Money, Wallet}
-import org.springframework.boot.web.client.RestTemplateBuilder
-import org.springframework.web.client.HttpClientErrorException
+import org.glassfish.jersey.client.ClientConfig
+import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature
 
 import scala.beans.BeanProperty
 
@@ -17,7 +20,8 @@ class WalletDao {
 }
 
 class HttpWallet(url: URI, username: String, password: String) extends Wallet {
-  private val rest = new RestTemplateBuilder().basicAuthorization(username, password).build()
+  private val basic = HttpAuthenticationFeature.basic(username, password)
+  private val rest = ClientBuilder.newClient(new ClientConfig().register(basic, 0))
 
   override def wager(amount: Money): Unit = createTransaction(-amount)
 
@@ -27,12 +31,17 @@ class HttpWallet(url: URI, username: String, password: String) extends Wallet {
     val transaction = new TransactionDao()
     transaction.amount = amount
     try {
-      rest.postForObject(url + "/transactions", transaction, classOf[WalletDao])
+      rest.target(url + "/transactions")
+        .request()
+        .post(Entity.entity(transaction, MediaType.APPLICATION_JSON_TYPE), classOf[WalletDao])
     } catch {
-      case e: HttpClientErrorException =>
-        if (e.getResponseBodyAsString.contains("not enough funds")) throw new NotEnoughFundsException() else throw e
+      case _: ForbiddenException => throw new NotEnoughFundsException()
     }
   }
 
-  override def getBalance: Money = rest.getForObject(url, classOf[WalletDao]).balance
+  override def getBalance: Money = rest.target(url)
+    .request()
+    .accept(MediaType.APPLICATION_JSON_TYPE)
+    .get(classOf[WalletDao])
+    .balance
 }

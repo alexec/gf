@@ -5,7 +5,7 @@ machine:
     - docker
 test:
   override:
-    - mvn verify -Dspring.data.mongodb.write-concern=ACKNOWLEDGED
+    - mvn verify -Dmongodb.write-concern=ACKNOWLEDGED
   post:
     - mkdir -p $CIRCLE_TEST_REPORTS/junit/
     - find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
@@ -14,10 +14,9 @@ deployment:
   prod:
     branch: master
     commands:
-      - mvn package spring-boot:repackage -DskipTests
+      - mvn package-DskipTests
       - docker build --rm=false -t alexec/gf:$CIRCLE_BUILD_NUM -t alexec/gf:latest .
       - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
       - docker push alexec/gf
-      - mvn clean package -Pexecutable
       - ./deploy.sh
       - "curl -f -u $CIRCLE_TOKEN: -X POST https://circleci.com/api/v1.1/project/github/phoebus-games/smoke/tree/master"

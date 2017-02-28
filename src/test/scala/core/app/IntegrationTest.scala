@@ -1,32 +1,29 @@
 package core.app
 
+import java.net.URI
+
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.client.WireMock._
+import games.App
 import io.restassured.RestAssured
 import io.restassured.builder.RequestSpecBuilder
-import org.junit.runner.RunWith
+import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory
 import org.junit.{After, Before}
-import org.springframework.boot.context.embedded.LocalServerPort
-import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT
-import org.springframework.test.context.ContextConfiguration
-import org.springframework.test.context.junit4.SpringRunner
 
-@RunWith(classOf[SpringRunner])
-@ContextConfiguration(classes = Array(classOf[TestConfig]))
-@SpringBootTest(webEnvironment = RANDOM_PORT)
-abstract class IntegrationTest {
+abstract class IntegrationTest(app: App) {
+  private val server = GrizzlyHttpServerFactory.createHttpServer(URI.create("http://0.0.0.0:8080"), app)
   private val wireMockServer = new WireMockServer(9090)
-  @LocalServerPort var port: Int = _
   var spec: RequestSpecBuilder = _
 
   @Before def before(): Unit = {
+
+    server.start()
+
     RestAssured.reset()
     RestAssured.enableLoggingOfRequestAndResponseIfValidationFails()
 
     spec = new RequestSpecBuilder()
-      .setPort(port)
       .addHeader("PlayerId", "0")
       .addHeader("Wallet", "http://localhost:9090")
 
@@ -47,6 +44,9 @@ abstract class IntegrationTest {
   }
 
   @After
-  def tearDown(): Unit =
+  def tearDown(): Unit = {
     wireMockServer.stop()
+
+    server.shutdown()
+  }
 }

@@ -11,10 +11,8 @@ import com.mongodb.{MongoClient, WriteConcern}
 import core.model.Wallet
 import org.bson.Document
 import org.bson.conversions.Bson
-import org.springframework.stereotype.Repository
 
 
-@Repository
 class GameRepo[G, S](mongo: MongoClient, gameName: String, factory: GameFactory[G, S], writeConcern: WriteConcern) {
 
   private val mapper = (new ObjectMapper() with ScalaObjectMapper)

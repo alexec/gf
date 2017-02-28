@@ -8,6 +8,8 @@ U=gf
 ssh $H "[ -e $D ] || mkdir $D"
 ssh $H "adduser --system $U || true"
 
-rsync -avz --progress target/$U.jar $H:/var/phoebus-games/$U.jar
+cat src/main/bin/service target/$U.jar > target/$U-exec.jar
+
+rsync -avz --progress target/$U-exec.jar $H:/var/phoebus-games/$U.jar
 
 ssh $H "echo > $D/$U.conf && chmod +x $D/$U.jar && ln -sf $D/$U.jar /etc/init.d/$U && chown $U /etc/init.d/$U && /etc/init.d/$U restart"
