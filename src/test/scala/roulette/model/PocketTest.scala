@@ -6,7 +6,7 @@ import org.junit.Test
 class PocketTest {
 
   private val redNumbers = List(1, 3, 5, 7, 9, 12, 14, 16, 18, 19, 21, 23, 25, 27, 30, 32, 34, 36)
-  private val blackNumbers = List(2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35).forall _
+  private val blackNumbers = List(2, 4, 6, 8, 10, 11, 13, 15, 17, 20, 22, 24, 26, 28, 29, 31, 33, 35)
 
   @Test def pocketCanBeZero(): Unit = Pocket(0)
 
@@ -24,19 +24,18 @@ class PocketTest {
     })
 
   @Test def redPocketsAreNotBlack(): Unit =
-    assertFalse(redNumbers.forall {
-      Pocket(_).isBlack
+    assertTrue(redNumbers.forall {
+      !Pocket(_).isBlack
     })
 
   @Test def blackPocketsAreBlack(): Unit =
-    assertTrue(blackNumbers {
+    assertTrue(blackNumbers.forall {
       Pocket(_).isBlack
     })
 
-
   @Test def blackPocketsAreNotRed(): Unit =
-    assertFalse(blackNumbers {
-      Pocket(_).isRed
+    assertTrue(blackNumbers.forall {
+      !Pocket(_).isRed
     })
 
 }

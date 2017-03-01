@@ -18,6 +18,7 @@ case class BetRequest(@BeanProperty amount:Money)
 @Path("/games/roulette")
 class RouletteController @Inject() (repo: RouletteRepo) {
 
+  // TOOD - remove
   @DELETE
   def delete(@HeaderParam("PlayerId") playerId: String): Response = {
     repo.delete(playerId)
@@ -45,7 +46,7 @@ class RouletteController @Inject() (repo: RouletteRepo) {
   def addNumbersBet(@HeaderParam("PlayerId") playerId: String, @HeaderParam("Wallet") uri: URI, numberBet: NumberBetRequest): Response =
     addBet(playerId, uri, NumberBet(numberBet.amount, Pocket(numberBet.number)))
 
-  private def addBet(playerId: String, uri: URI, bet: Bet) = {
+  private def addBet(playerId: String, uri: URI, bet: Bet) :Response= {
     val wallet = getWallet(uri)
     repo.set(playerId, repo.get(playerId, wallet).addBet(bet))
     Response.created(URI.create(".")).entity(Map("balance" -> wallet.getBalance)).build()

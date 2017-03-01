@@ -3,6 +3,7 @@ package roulette.app
 import core.app.IntegrationTest
 import io.restassured.RestAssured
 import io.restassured.RestAssured.given
+import io.restassured.http.ContentType
 import org.hamcrest.Matchers.{equalTo, notNullValue}
 import org.junit.{Before, Test}
 
@@ -11,7 +12,11 @@ class RouletteControllerIT extends IntegrationTest(new RouletteTestConfig) {
   @Before override def before(): Unit = {
     super.before()
 
-    RestAssured.requestSpecification = spec.setBasePath("/games/roulette").build()
+    RestAssured.requestSpecification = spec
+      .setBasePath("/games/roulette")
+      .setContentType(ContentType.JSON)
+      .setAccept(ContentType.JSON)
+      .build()
 
     given()
       .when()
@@ -32,8 +37,7 @@ class RouletteControllerIT extends IntegrationTest(new RouletteTestConfig) {
 
   @Test def addNumberBet(): Unit = {
     given()
-      .param("amount", "10")
-      .param("number", "19")
+      .body("{\"amount\": 10, \"number\": 19}")
       .when()
       .post("/bets/number")
       .`then`()
@@ -51,7 +55,7 @@ class RouletteControllerIT extends IntegrationTest(new RouletteTestConfig) {
 
   @Test def addRedBet(): Unit = {
     given()
-      .param("amount", "10")
+      .body("{\"amount\": 10}")
       .when()
       .post("/bets/red")
       .`then`()
@@ -68,7 +72,7 @@ class RouletteControllerIT extends IntegrationTest(new RouletteTestConfig) {
 
   @Test def addBlackBet(): Unit = {
     given()
-      .param("amount", "10")
+      .body("{\"amount\": 10}")
       .when()
       .post("/bets/black")
       .`then`()
@@ -85,7 +89,7 @@ class RouletteControllerIT extends IntegrationTest(new RouletteTestConfig) {
 
   @Test def spin(): Unit = {
     given()
-      .param("amount", "10")
+      .body("{\"amount\": 10}")
       .when()
       .post("/bets/black")
       .`then`()
@@ -94,9 +98,19 @@ class RouletteControllerIT extends IntegrationTest(new RouletteTestConfig) {
       .when()
       .post("/spins")
       .`then`()
-      .statusCode(200)
+      .statusCode(201)
       .body("balance", notNullValue())
       .body("pocket", notNullValue())
+  }
+
+  @Test def badAddBet(): Unit = {
+    given()
+      .body("{\"amount\": -1}")
+      .when()
+      .post("/bets/black")
+      .`then`()
+      .statusCode(400)
+      .body("message", equalTo("requirement failed: amount must be greater than zero"))
   }
 
   @Test def badSpin(): Unit = {

@@ -10,11 +10,12 @@ import classicslot.infra.ClassicSlotRepo
 
 import scala.beans.BeanProperty
 
-case class Spin (@BeanProperty var amount: Money)
+case class Spin (@BeanProperty amount: Money)
 
 @Path("/games/classic-slot")
 class ClassicSlotController @Inject() (repo: ClassicSlotRepo) {
 
+  // TODO - remove
   @DELETE
   def delete(@HeaderParam("PlayerId") playerId: String): Response = {
     repo.delete(playerId)

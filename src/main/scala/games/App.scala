@@ -6,6 +6,7 @@ import java.util.Properties
 import classicslot.app.ClassicSlotController
 import classicslot.infra.ClassicSlotRepo
 import com.mongodb.{MongoClient, WriteConcern}
+import games.app.{GeneralExceptionMapper, IllegalArgumentExceptionMapper, ScalaFriendlyJacksonJsonProvider}
 import org.glassfish.hk2.api.Factory
 import org.glassfish.hk2.utilities.binding.AbstractBinder
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory
@@ -24,8 +25,10 @@ object App {
 
 class App extends ResourceConfig {
   private val properties = new Properties()
+  properties.putAll(System.getProperties)
+  System.getenv().forEach((k,v) => properties.put(k.replaceAll("_", ".").toLowerCase, v))
   private val writeConcern: WriteConcern = WriteConcern.valueOf(properties.getProperty("mongodb.write-concern", "JOURNALED"))
-  private val mongo = new MongoClient()
+  private val mongo = new MongoClient(properties.getProperty("mongodb.host"))
   private val rouletteRepo = new RouletteRepo(mongo, writeConcern)
   private val classicSlotRepo = new ClassicSlotRepo(mongo, writeConcern)
 
@@ -38,11 +41,15 @@ class App extends ResourceConfig {
   register(classOf[RouletteController])
   register(classOf[ClassicSlotController])
 
+  register(classOf[IllegalArgumentExceptionMapper])
+  register(classOf[GeneralExceptionMapper])
+  register(classOf[ScalaFriendlyJacksonJsonProvider])
+
   register(new AbstractBinder() {
     override protected def configure() {
       bindFactory(new SimpleFactory(rouletteRepo)).to(classOf[RouletteRepo])
       bindFactory(new SimpleFactory(classicSlotRepo)).to(classOf[ClassicSlotRepo])
-      //bindFactory(new SimpleFactory(Money(1))).to(classOf[Money])
+
     }
   }, 0)
 }

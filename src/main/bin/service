@@ -10,13 +10,13 @@
 #
 
 ### BEGIN INIT INFO
-# Provides:          wallet
+# Provides:          gf
 # Required-Start:    $remote_fs $syslog $network
 # Required-Stop:     $remote_fs $syslog $network
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: wallet
-# Description:       wallet
+# Short-Description: gf
+# Description:       gf
 # chkconfig:         2345 99 01
 ### END INIT INFO
 

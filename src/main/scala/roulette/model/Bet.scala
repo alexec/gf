@@ -8,7 +8,7 @@ import scala.beans.BeanProperty
 sealed trait Bet {
   @BeanProperty val amount: Money
 
-  require(amount > 0)
+  require(amount > 0, "amount must be greater than zero")
 
   def payout(pocket: Pocket): Money = amount * (payoutMultiplier(pocket) match {
     case 0 => 0
