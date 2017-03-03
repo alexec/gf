@@ -6,7 +6,7 @@ import java.util.Properties
 import classicslot.app.ClassicSlotController
 import classicslot.infra.ClassicSlotRepo
 import com.mongodb.{MongoClient, WriteConcern}
-import games.app.{GeneralExceptionMapper, IllegalArgumentExceptionMapper, ScalaFriendlyJacksonJsonProvider}
+import games.app.{IllegalArgumentExceptionMapper, ScalaFriendlyJacksonJsonProvider}
 import org.glassfish.hk2.api.Factory
 import org.glassfish.hk2.utilities.binding.AbstractBinder
 import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory
@@ -41,7 +41,6 @@ class App extends ResourceConfig {
   register(classOf[RouletteController])
   register(classOf[ClassicSlotController])
 
-  register(classOf[GeneralExceptionMapper])
   register(classOf[IllegalArgumentExceptionMapper])
   register(classOf[ScalaFriendlyJacksonJsonProvider])
 
