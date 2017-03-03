@@ -26,10 +26,11 @@ spec:
       containers:
       - name: gf
         image: alexec/gf:latest
+        imagePullPolicy: Always
         env:
-          #- name: JAVA_OPTS
-          #  value: -Xmx64m
-          - name: SPRING_DATA_MONGODB_HOST
+          - name: JAVA_OPTS
+            value: -Xmx256m
+          - name: MONGODB_HOST
             value: statedb
         ports:
         - containerPort: 8080
