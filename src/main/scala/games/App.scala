@@ -41,8 +41,8 @@ class App extends ResourceConfig {
   register(classOf[RouletteController])
   register(classOf[ClassicSlotController])
 
-  register(classOf[IllegalArgumentExceptionMapper])
   register(classOf[GeneralExceptionMapper])
+  register(classOf[IllegalArgumentExceptionMapper])
   register(classOf[ScalaFriendlyJacksonJsonProvider])
 
   register(new AbstractBinder() {
