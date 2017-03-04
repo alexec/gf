@@ -15,7 +15,7 @@ deployment:
     branch: master
     commands:
       - mvn package -DskipTests
-      - docker build --rm=false -t alexec/gf:$CIRCLE_BUILD_NUM -t alexec/gf:latest .
+      - docker build --rm=false -t alexec/games:$CIRCLE_BUILD_NUM -t alexec/games:latest .
       - docker login -e $DOCKER_EMAIL -u $DOCKER_USER -p $DOCKER_PASS
-      - docker push alexec/gf
-      - "curl -fv -u $CIRCLE_TOKEN: -X POST -d '{\"build_parameters\": {\"COMPONENT\": \"gf\"}}' -H 'Content-Type: application/json' https://circleci.com/api/v1.1/project/github/phoebus-games/deploy/tree/master"
+      - docker push alexec/games
+      - "curl -fv -u $CIRCLE_TOKEN: -X POST -d '{\"build_parameters\": {\"COMPONENT\": \"games\"}}' -H 'Content-Type: application/json' https://circleci.com/api/v1.1/project/github/phoebus-games/deploy/tree/master"
