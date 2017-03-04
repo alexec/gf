@@ -1,7 +1,7 @@
 package core.infra
 
+import javax.ws.rs.ext.Provider
 
-//TODO@ResponseStatus(value = HttpStatus.FORBIDDEN, reason = "not enough funds")
-class NotEnoughFundsException extends RuntimeException {
 
-}
+@Provider
+class NotEnoughFundsException(message: String) extends RuntimeException(message)

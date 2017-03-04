@@ -35,7 +35,8 @@ class HttpWallet(url: URI, username: String, password: String) extends Wallet {
         .request()
         .post(Entity.entity(transaction, MediaType.APPLICATION_JSON_TYPE), classOf[WalletDao])
     } catch {
-      case _: ForbiddenException => throw new NotEnoughFundsException()
+      case e: ForbiddenException =>
+        if (e.getResponse.getEntity.toString.contains("not enough funds")) throw new NotEnoughFundsException(e.getMessage) else throw e;
     }
   }
 

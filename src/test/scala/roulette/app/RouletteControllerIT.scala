@@ -1,5 +1,6 @@
 package roulette.app
 
+import com.github.tomakehurst.wiremock.client.WireMock.{aResponse, post, stubFor, urlEqualTo}
 import core.app.IntegrationTest
 import io.restassured.RestAssured
 import io.restassured.RestAssured.given
@@ -120,5 +121,21 @@ class RouletteControllerIT extends IntegrationTest(new RouletteTestConfig) {
       .`then`()
       .statusCode(400)
       .body("message", equalTo("requirement failed: no bets on table"))
+  }
+
+  @Test def notEnoughFunds(): Unit = {
+
+    stubFor(post(urlEqualTo("/transactions"))
+      .willReturn(aResponse()
+        .withStatus(403)
+        .withBody("{\"message\": \"not enough funds\"}")))
+
+    given()
+      .body("{\"amount\": 10}")
+      .when()
+      .post("/bets/black")
+      .`then`()
+      .statusCode(403)
+      .body("message", equalTo("not enough funds"))
   }
 }

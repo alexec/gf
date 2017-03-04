@@ -6,6 +6,7 @@ import java.util.Properties
 import classicslot.app.ClassicSlotController
 import classicslot.infra.ClassicSlotRepo
 import com.mongodb.{MongoClient, WriteConcern}
+import core.infra.NotEnoughFundsException
 import games.app.{IllegalArgumentExceptionMapper, ScalaFriendlyJacksonJsonProvider}
 import org.glassfish.hk2.api.Factory
 import org.glassfish.hk2.utilities.binding.AbstractBinder
@@ -42,6 +43,7 @@ class App extends ResourceConfig {
   register(classOf[ClassicSlotController])
 
   register(classOf[IllegalArgumentExceptionMapper])
+  register(classOf[NotEnoughFundsException])
   register(classOf[ScalaFriendlyJacksonJsonProvider])
 
   register(new AbstractBinder() {
