@@ -19,6 +19,11 @@ class WalletDao {
   @BeanProperty var balance: Money = _
 }
 
+class ErrorDao {
+  @BeanProperty var message: String = _
+}
+
+
 class HttpWallet(url: URI, username: String, password: String) extends Wallet {
   private val basic = HttpAuthenticationFeature.basic(username, password)
   private val rest = ClientBuilder.newClient(new ClientConfig().register(basic, 0))
@@ -36,7 +41,8 @@ class HttpWallet(url: URI, username: String, password: String) extends Wallet {
         .post(Entity.entity(transaction, MediaType.APPLICATION_JSON_TYPE), classOf[WalletDao])
     } catch {
       case e: ForbiddenException =>
-        if (e.getResponse.getEntity.toString.contains("not enough funds")) throw new NotEnoughFundsException(e.getMessage) else throw e;
+        val error = e.getResponse.readEntity(classOf[ErrorDao])
+        if (error.message.equals("not enough funds")) throw new NotEnoughFundsException(error.message) else throw e;
     }
   }
 

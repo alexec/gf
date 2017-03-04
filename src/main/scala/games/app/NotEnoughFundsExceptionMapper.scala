@@ -8,5 +8,5 @@ import core.infra.NotEnoughFundsException
 @Provider
 class NotEnoughFundsExceptionMapper extends ExceptionMapper[NotEnoughFundsException] {
   override def toResponse(e: NotEnoughFundsException): Response =
-    Response.status(403).entity(Map("message" -> e.getMessage)).build()
+    Response.status(403).header("Content-Type", "application/json").entity(Map("message" -> e.getMessage)).build()
 }

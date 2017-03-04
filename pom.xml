@@ -80,6 +80,12 @@
                             <goal>integration-test</goal>
                             <goal>verify</goal>
                         </goals>
+                        <configuration>
+                            <includes>
+                                <include>**/**IT.java</include>
+                                <include>**/**Simulation.java</include>
+                            </includes>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>

@@ -128,6 +128,7 @@ class RouletteControllerIT extends IntegrationTest(new RouletteTestConfig) {
     stubFor(post(urlEqualTo("/transactions"))
       .willReturn(aResponse()
         .withStatus(403)
+        .withHeader("Content-Type", "application/json")
         .withBody("{\"message\": \"not enough funds\"}")))
 
     given()
