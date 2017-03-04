@@ -27,6 +27,7 @@ class MonteCarloSimulator[G](
   def main(args: Array[String]): Unit = {
     val totalPlays = 1000000
     val start = System.currentTimeMillis()
+    println(s"Running ${this}")
     println(s"Total plays: ${format(totalPlays)}")
     var game = factory(wallet)
     for (_ <- 0 to totalPlays) {
@@ -43,5 +44,5 @@ class MonteCarloSimulator[G](
 
   private def format(value: Long): String = NumberFormat.getIntegerInstance.format(value)
 
-  def outOfExpectedRange(): Boolean = (wallet.returnToPlayer() - expectedReturnToPlayer).abs > expectedRange
+  private def outOfExpectedRange(): Boolean = (wallet.returnToPlayer() - expectedReturnToPlayer).abs > expectedRange
 }
