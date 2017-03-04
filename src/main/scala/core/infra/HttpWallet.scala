@@ -13,6 +13,7 @@ import scala.beans.BeanProperty
 
 class TransactionDao {
   @BeanProperty var amount: Money = _
+  @BeanProperty var category: String = _
 }
 
 class WalletDao {
@@ -35,6 +36,7 @@ class HttpWallet(url: URI, username: String, password: String) extends Wallet {
   private def createTransaction(amount: Money) = {
     val transaction = new TransactionDao()
     transaction.amount = amount
+    transaction.category = if (amount > 0) "PAYOUT" else "WAGER"
     try {
       rest.target(url + "/transactions")
         .request()

@@ -39,7 +39,7 @@ abstract class IntegrationTest(app: App) {
 
     stubFor(post(urlEqualTo("/transactions"))
       .willReturn(aResponse()
-        .withStatus(204)
+        .withStatus(201)
         .withHeader("Content-Type", "application/json")))
   }
 

@@ -75,7 +75,7 @@ class HttpWalletTest {
       .withBasicAuth("username", "password")
       .withRequestBody(containing("\"amount\":-1"))
       .willReturn(aResponse()
-        .withStatus(204)
+        .withStatus(201)
         .withHeader("Content-Type", "application/json")))
     wallet.wager(Money(1))
   }
@@ -86,7 +86,7 @@ class HttpWalletTest {
       .withBasicAuth("username", "password")
       .withRequestBody(containing("\"amount\":1"))
       .willReturn(aResponse()
-        .withStatus(204)
+        .withStatus(201)
         .withHeader("Content-Type", "application/json")))
     wallet.payout(Money(1))
   }
