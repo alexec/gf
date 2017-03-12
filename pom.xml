@@ -13,7 +13,6 @@
         <module>game-support</module>
         <module>game-test-support</module>
         <module>slot-support</module>
-        <module>classic-slot</module>
     </modules>
 
     <properties>
