@@ -5,7 +5,7 @@ machine:
     - docker
 dependencies:
   override:
-    - mvn dependency:go-offline -DexcludeGroupIds=phoebus-games
+    - mvn dependency:go-offline -Dmdep.excludeGroupIds=phoebus-games
 test:
   override:
     - mvn verify -Dmongodb.write-concern=ACKNOWLEDGED
