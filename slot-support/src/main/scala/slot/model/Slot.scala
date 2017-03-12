@@ -2,7 +2,7 @@ package slot.model
 
 import java.security.SecureRandom
 
-import core.model.{Money, Wallet}
+import games.model.{Money, Wallet}
 
 
 object Slot {

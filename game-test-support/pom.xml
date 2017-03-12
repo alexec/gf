@@ -9,21 +9,13 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>slot-support</artifactId>
+    <artifactId>game-test-support</artifactId>
 
     <build>
         <plugins>
             <plugin>
                 <groupId>org.scala-tools</groupId>
                 <artifactId>maven-scala-plugin</artifactId>
-            </plugin>
-            <plugin>
-                <groupId>org.pitest</groupId>
-                <artifactId>pitest-maven</artifactId>
-                <configuration>
-                    <coverageThreshold>93</coverageThreshold>
-                    <mutationThreshold>29</mutationThreshold>
-                </configuration>
             </plugin>
         </plugins>
     </build>
@@ -36,14 +28,22 @@
         <dependency>
             <groupId>phoebus-games</groupId>
             <artifactId>game-support</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>phoebus-games</groupId>
-            <artifactId>game-test-support</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.github.tomakehurst</groupId>
+            <artifactId>wiremock</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 

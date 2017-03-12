@@ -1,6 +1,6 @@
 package slot.model
 
-import core.model.{Money, SimpleWallet}
+import games.model.{Money, SimpleWallet}
 import org.junit.Assert._
 import org.junit.Test
 

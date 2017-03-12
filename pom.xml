@@ -10,10 +10,11 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>core</module>
-        <module>model-test-support</module>
+        <module>game-support</module>
+        <module>game-test-support</module>
+        <module>roulette</module>
         <module>slot-support</module>
-        <module>games</module>
+        <module>classic-slot</module>
     </modules>
 
     <properties>
@@ -22,6 +23,7 @@
         <java.version>1.8</java.version>
         <skipTests>false</skipTests>
         <jackson.version>2.8.6</jackson.version>
+        <game.mainClass/>
     </properties>
 
     <build>
@@ -73,6 +75,31 @@
                         <timestampedReports>false</timestampedReports>
                     </configuration>
                 </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-shade-plugin</artifactId>
+                    <version>1.6</version>
+                    <executions>
+                        <execution>
+                            <phase>package</phase>
+                            <goals>
+                                <goal>shade</goal>
+                            </goals>
+                            <configuration>
+                                <transformers>
+                                    <transformer
+                                            implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                                    <transformer
+                                            implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                        <manifestEntries>
+                                            <Main-Class>${game.mainClass}</Main-Class>
+                                        </manifestEntries>
+                                    </transformer>
+                                </transformers>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>
@@ -87,7 +114,23 @@
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-simple</artifactId>
-                <version>1.7.12</version>
+                <version>1.7.24</version>
+            </dependency>
+            <dependency>
+                <groupId>phoebus-games</groupId>
+                <artifactId>game-support</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>phoebus-games</groupId>
+                <artifactId>slot-support</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <!-- harmonise jackson to 2.8.6-->
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>${jackson.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
@@ -107,8 +150,20 @@
             </dependency>
             <dependency>
                 <groupId>phoebus-games</groupId>
-                <artifactId>model-test-support</artifactId>
+                <artifactId>game-test-support</artifactId>
                 <version>${project.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.github.tomakehurst</groupId>
+                <artifactId>wiremock</artifactId>
+                <version>2.5.1</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.rest-assured</groupId>
+                <artifactId>rest-assured</artifactId>
+                <version>3.0.2</version>
                 <scope>test</scope>
             </dependency>
         </dependencies>
