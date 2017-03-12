@@ -1,8 +1,6 @@
 machine:
   java:
     version: openjdk8
-  services:
-    - docker
 dependencies:
   override:
     - mvn install -DskipTests
@@ -12,3 +10,10 @@ test:
   post:
     - mkdir -p $CIRCLE_TEST_REPORTS/junit/
     - find . -type f -regex ".*/target/surefire-reports/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
+    - find . -type f -regex ".*/target/failsafe-reports/.*xml" -exec cp {} $CIRCLE_TEST_REPORTS/junit/ \;
+deployment:
+  prod:
+    branch: master
+    commands:
+      - "curl -fv -u $CIRCLE_TOKEN: -X POST https://circleci.com/api/v1.1/project/github/phoebus-games/roulette/tree/master"
+      - "curl -fv -u $CIRCLE_TOKEN: -X POST https://circleci.com/api/v1.1/project/github/phoebus-games/classic-slot/tree/master"
