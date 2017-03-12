@@ -5,8 +5,8 @@ import javax.inject.Inject
 import javax.ws.rs._
 import javax.ws.rs.core.Response
 
-import _root_.core.infra.HttpWallet
 import _root_.core.model.Money
+import games.infra.HttpWallet
 import roulette.infra.RouletteRepo
 import roulette.model._
 

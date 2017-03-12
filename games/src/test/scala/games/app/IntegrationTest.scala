@@ -1,4 +1,4 @@
-package core.app
+package games.app
 
 import java.net.URI
 

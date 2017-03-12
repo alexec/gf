@@ -1,10 +1,11 @@
-package core.infra
+package games.infra
 
 import java.net.URI
 import javax.ws.rs.ForbiddenException
 import javax.ws.rs.client.{ClientBuilder, Entity}
 import javax.ws.rs.core.MediaType
 
+import core.infra.NotEnoughFundsException
 import core.model.{Money, Wallet}
 import org.glassfish.jersey.client.ClientConfig
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature

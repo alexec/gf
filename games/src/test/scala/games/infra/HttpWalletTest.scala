@@ -1,10 +1,11 @@
-package core.infra
+package games.infra
 
 import java.net.URI
 
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.client.WireMock._
+import core.infra.NotEnoughFundsException
 import core.model.Money
 import org.junit.Assert.assertEquals
 import org.junit.{After, Before, Test}

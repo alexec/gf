@@ -4,9 +4,9 @@ import javax.inject.Inject
 import javax.ws.rs.core.Response
 import javax.ws.rs.{HeaderParam, _}
 
-import _root_.core.infra.HttpWallet
 import _root_.core.model.Money
 import classicslot.infra.ClassicSlotRepo
+import games.infra.HttpWallet
 
 import scala.beans.BeanProperty
 

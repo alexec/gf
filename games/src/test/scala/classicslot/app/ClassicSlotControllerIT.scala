@@ -1,6 +1,6 @@
 package classicslot.app
 
-import core.app.IntegrationTest
+import games.app.IntegrationTest
 import io.restassured.RestAssured
 import io.restassured.RestAssured.given
 import io.restassured.http.ContentType
