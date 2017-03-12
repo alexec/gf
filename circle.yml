@@ -3,6 +3,9 @@ machine:
     version: openjdk8
   services:
     - docker
+dependencies:
+  override:
+    - mvn dependency:go-offline -DexcludeGroupIds=phoebus-games
 test:
   override:
     - mvn verify -Dmongodb.write-concern=ACKNOWLEDGED
