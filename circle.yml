@@ -5,7 +5,7 @@ machine:
     - docker
 dependencies:
   override:
-    - mvn dependency:go-offline -Dmdep.excludeGroupIds=phoebus-games
+    - mvn install -DskipTests
 compile:
   override:
     - mvn install -DskipTests
