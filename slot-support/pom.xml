@@ -2,16 +2,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
     <parent>
-        <groupId>phoebus-games</groupId>
         <artifactId>games-parent</artifactId>
+        <groupId>phoebus-games</groupId>
         <version>1.0.0-SNAPSHOT</version>
     </parent>
-
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>core</artifactId>
+    <artifactId>slot-support</artifactId>
 
     <build>
         <plugins>
@@ -23,8 +21,8 @@
                 <groupId>org.pitest</groupId>
                 <artifactId>pitest-maven</artifactId>
                 <configuration>
-                    <coverageThreshold>80</coverageThreshold>
-                    <mutationThreshold>56</mutationThreshold>
+                    <coverageThreshold>93</coverageThreshold>
+                    <mutationThreshold>29</mutationThreshold>
                 </configuration>
             </plugin>
         </plugins>
@@ -36,14 +34,14 @@
             <artifactId>scala-library</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.fasterxml.jackson.module</groupId>
-            <artifactId>jackson-module-scala_2.12</artifactId>
-            <version>${jackson.version}</version>
+            <groupId>phoebus-games</groupId>
+            <artifactId>core</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
-            <groupId>org.mongodb</groupId>
-            <artifactId>mongo-java-driver</artifactId>
-            <version>3.2.2</version>
+            <groupId>phoebus-games</groupId>
+            <artifactId>model-test-support</artifactId>
+            <version>${project.version}</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

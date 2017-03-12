@@ -12,6 +12,7 @@
     <modules>
         <module>core</module>
         <module>model-test-support</module>
+        <module>slot-support</module>
         <module>games</module>
     </modules>
 
@@ -46,6 +47,31 @@
                             </goals>
                         </execution>
                     </executions>
+                </plugin>
+                <plugin>
+                    <groupId>org.pitest</groupId>
+                    <artifactId>pitest-maven</artifactId>
+                    <version>1.1.11</version>
+                    <executions>
+                        <execution>
+                            <phase>verify</phase>
+                            <goals>
+                                <goal>mutationCoverage</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <skip>${skipTests}</skip>
+                        <targetClasses>
+                            <targetClass>*.model.*</targetClass>
+                        </targetClasses>
+                        <targetTests>
+                            <targetTests>*.model.*</targetTests>
+                        </targetTests>
+                        <coverageThreshold>99</coverageThreshold>
+                        <mutationThreshold>99</mutationThreshold>
+                        <timestampedReports>false</timestampedReports>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>

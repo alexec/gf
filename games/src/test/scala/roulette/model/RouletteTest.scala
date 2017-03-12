@@ -17,7 +17,7 @@ class RouletteTest {
     roulette.addBet(NumberBet(wager, Pocket(0)))
   }
 
-  @Test(expected = classOf[IllegalArgumentException]) def cannotBetOn37(): Unit = {
+  @Test(expected = classOf[IllegalArgumentException]) def cannotBetOnm37(): Unit = {
     roulette.addBet(NumberBet(wager, Pocket(37)))
   }
 
