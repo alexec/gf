@@ -39,6 +39,7 @@ abstract class App extends ResourceConfig {
   register(classOf[IllegalArgumentExceptionMapper])
   register(classOf[NotEnoughFundsExceptionMapper])
   register(classOf[ScalaFriendlyJacksonJsonProvider])
+  register(classOf[ServerErrorExceptionMapper])
 
   protected class SimpleFactory[T](t: T) extends Factory[T] {
     override def dispose(instance: T): Unit = {}
