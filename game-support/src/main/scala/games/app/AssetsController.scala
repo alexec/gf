@@ -1,6 +1,5 @@
 package games.app
 
-import java.io.BufferedInputStream
 import javax.ws.rs.core.Response
 import javax.ws.rs.{GET, Path, PathParam}
 
@@ -23,7 +22,6 @@ class AssetsController {
       return Response.status(404).build()
     }
 
-    val bis = new BufferedInputStream(in)
     val arr = Stream.continually(in.read).takeWhile(-1 !=).map(_.toByte).toArray
 
     Response
