@@ -1,65 +1,37 @@
 package games.app
 
 import javax.ws.rs.core.{MediaType, Response}
-import javax.ws.rs.{GET, Path, Produces}
+import javax.ws.rs.{GET, Path, PathParam, Produces}
 
-import scala.io.Source
-
-@Path("/")
+@Path("/games")
 @Produces(Array(MediaType.TEXT_HTML))
 class IndexController {
 
-  @GET def index(): Response = {
-    val assets = Source.fromInputStream(classOf[IndexController].getResourceAsStream("/manifest")).getLines()
+  @Path("/{gameName}")
+  @GET
+  def index(@PathParam("gameName") gameName: String): Response = {
+    val assets =
+      List(
+        "/assets/core/js/jquery-3.1.1.min.js",
+        "/assets/core/js/core.js",
+        s"/assets/games/$gameName/js/game.js"
+      )
+
     val scripts = assets.map(asset => s"<script src='$asset'></script>").mkString("\n")
     Response
       .ok(
         s"""<html>
           <head>
-              <script>
-                  core = {
-                      canvas: {
-                          getWidth: function () {
-                              return 800
-                          },
-                          getHeight: function () {
-                              return 600
-                          }
-                      },
-                      coin: 0.01,
-                      init: function () {
-                      },
-                      ready: function () {
-                      },
-                      unready: function () {
-                      },
-                      api: function (path) {
-                          return "/api" + path;
-                      },
-                      setBalance: function (balance) {
-                          document.getElementById("balance").innerHTML = balance;
-                      },
-                      handleError: function (x, t, r) {
-                          alert(r)
-                      },
-                      addButton: function (text, fn) {
-                          var b = document.createElement("div");
-                          b.innerHTML = text;
-                          b.onclick = fn;
-                          document.getElementById("buttons").appendChild(b);
-                      },
-                      enableButton: function () {
-                      },
-                      disableButton: function () {
-                      }
-                  }
-              </script>
+           <meta charset="utf-8" />
               $scripts
-              </head>
-              <body>
+          </head>
+            <body>
             <div id="balance"></div>
             <div id="canvas"></div>
             <div id="buttons"></div>
+            <script defer>
+              setTimeout(function() {game.init(\"canvas\", 800, 600);}, 250);
+            </script>
             </body>
             </html>""")
       .build()
