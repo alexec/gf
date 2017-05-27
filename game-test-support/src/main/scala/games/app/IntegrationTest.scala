@@ -1,24 +1,23 @@
 package games.app
 
-import java.net.URI
-
 import com.github.tomakehurst.wiremock.WireMockServer
 import com.github.tomakehurst.wiremock.client.WireMock
 import com.github.tomakehurst.wiremock.client.WireMock._
-import games.App
 import io.restassured.RestAssured
 import io.restassured.builder.RequestSpecBuilder
-import org.glassfish.jersey.grizzly2.httpserver.GrizzlyHttpServerFactory
+import org.junit.runner.RunWith
 import org.junit.{After, Before}
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment
+import org.springframework.test.context.junit4.SpringRunner
 
-abstract class IntegrationTest(app: App) {
-  private val server = GrizzlyHttpServerFactory.createHttpServer(URI.create("http://0.0.0.0:8080"), app)
+@RunWith(classOf[SpringRunner])
+@SpringBootTest(webEnvironment = WebEnvironment.DEFINED_PORT)
+abstract class IntegrationTest {
   private val wireMockServer = new WireMockServer(9090)
   var spec: RequestSpecBuilder = _
 
   @Before def before(): Unit = {
-
-    server.start()
 
     RestAssured.reset()
     RestAssured.enableLoggingOfRequestAndResponseIfValidationFails()
@@ -46,7 +45,5 @@ abstract class IntegrationTest(app: App) {
   @After
   def tearDown(): Unit = {
     wireMockServer.stop()
-
-    server.shutdown()
   }
 }

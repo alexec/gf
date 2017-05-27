@@ -20,8 +20,6 @@
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <java.version>1.8</java.version>
         <skipTests>false</skipTests>
-        <jackson.version>2.8.8</jackson.version>
-        <slf4j.version>1.7.25</slf4j.version>
         <game.mainClass/>
     </properties>
 
@@ -74,31 +72,6 @@
                         <timestampedReports>false</timestampedReports>
                     </configuration>
                 </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-shade-plugin</artifactId>
-                    <version>1.6</version>
-                    <executions>
-                        <execution>
-                            <phase>package</phase>
-                            <goals>
-                                <goal>shade</goal>
-                            </goals>
-                            <configuration>
-                                <transformers>
-                                    <transformer
-                                            implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
-                                    <transformer
-                                            implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                        <manifestEntries>
-                                            <Main-Class>${game.mainClass}</Main-Class>
-                                        </manifestEntries>
-                                    </transformer>
-                                </transformers>
-                            </configuration>
-                        </execution>
-                    </executions>
-                </plugin>
             </plugins>
         </pluginManagement>
     </build>
@@ -111,11 +84,6 @@
                 <version>2.12.1</version>
             </dependency>
             <dependency>
-                <groupId>org.slf4j</groupId>
-                <artifactId>slf4j-simple</artifactId>
-                <version>${slf4j.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>phoebus-games</groupId>
                 <artifactId>game-support</artifactId>
                 <version>${project.version}</version>
@@ -124,22 +92,6 @@
                 <groupId>phoebus-games</groupId>
                 <artifactId>slot-support</artifactId>
                 <version>${project.version}</version>
-            </dependency>
-            <!-- harmonise jackson to 2.8.6-->
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-annotations</artifactId>
-                <version>${jackson.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-core</artifactId>
-                <version>${jackson.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.fasterxml.jackson.core</groupId>
-                <artifactId>jackson-databind</artifactId>
-                <version>${jackson.version}</version>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>
