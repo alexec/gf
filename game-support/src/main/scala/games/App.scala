@@ -7,7 +7,9 @@ import games.app._
 import org.glassfish.hk2.api.Factory
 import org.glassfish.hk2.utilities.binding.AbstractBinder
 import org.glassfish.jersey.server.ResourceConfig
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 
+@EnableAutoConfiguration
 abstract class App extends ResourceConfig {
   protected val properties: Properties = new Properties()
   protected val writeConcern: WriteConcern = WriteConcern.valueOf(properties.getProperty("mongodb.write-concern", "JOURNALED"))
@@ -35,6 +37,7 @@ abstract class App extends ResourceConfig {
 
     override def provide(): T = t
   }
+
 }
 
 
