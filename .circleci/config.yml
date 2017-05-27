@@ -1,7 +1,7 @@
 version: 2
 jobs:
   build:
-    working_directory: .
+    working_directory: work
     docker:
       - image: "circleci/openjdk:8"
     steps:
