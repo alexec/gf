@@ -11,9 +11,12 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 
 @EnableAutoConfiguration
 abstract class App extends ResourceConfig {
-  protected val properties: Properties = new Properties(System.getProperties)
+  protected val properties: Properties = {
+    val p = new Properties(System.getProperties)
+    System.getenv().forEach((k, v) => p.put(k.replaceAll("_", ".").toLowerCase, v))
+    p
+  }
   protected val writeConcern: WriteConcern = WriteConcern.valueOf(properties.getProperty("mongodb.write-concern", "JOURNALED"))
-  System.getenv().forEach((k, v) => properties.put(k.replaceAll("_", ".").toLowerCase, v))
   protected val mongo: MongoClient = new MongoClient(properties.getProperty("mongodb.host"))
 
 
