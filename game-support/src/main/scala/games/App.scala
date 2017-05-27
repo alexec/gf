@@ -33,9 +33,6 @@ abstract class App extends ResourceConfig {
     }, 0)
   }
 
-  register(classOf[IndexController])
-  register(classOf[AssetsController])
-
   register(classOf[IllegalArgumentExceptionMapper])
   register(classOf[NotEnoughFundsExceptionMapper])
   register(classOf[ScalaFriendlyJacksonJsonProvider])
