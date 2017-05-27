@@ -8,6 +8,7 @@ import org.glassfish.hk2.api.Factory
 import org.glassfish.hk2.utilities.binding.AbstractBinder
 import org.glassfish.jersey.server.ResourceConfig
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
+import org.springframework.context.annotation.Bean
 
 @EnableAutoConfiguration
 abstract class App extends ResourceConfig {
@@ -18,6 +19,7 @@ abstract class App extends ResourceConfig {
     p
   }
   protected val writeConcern: WriteConcern = WriteConcern.valueOf(properties.getProperty("mongodb.write-concern", "JOURNALED"))
+  @Bean
   protected val mongo: MongoClient = new MongoClient(properties.getProperty("mongodb.host"))
 
 
