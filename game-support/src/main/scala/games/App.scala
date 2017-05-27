@@ -12,7 +12,8 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 @EnableAutoConfiguration
 abstract class App extends ResourceConfig {
   protected val properties: Properties = {
-    val p = new Properties(System.getProperties)
+    val p = new Properties()
+    p.putAll(System.getProperties)
     System.getenv().forEach((k, v) => p.put(k.replaceAll("_", ".").toLowerCase, v))
     p
   }
